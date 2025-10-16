@@ -12,6 +12,11 @@ function App() {
     // TODO: Process the receipt
   }
 
+  const handleDeleteFile = () => {
+    setUploadedFile(null)
+    console.log('File deleted')
+  }
+
   return (
     <div className="app">
       <Header />
@@ -19,7 +24,14 @@ function App() {
         <ReceiptUpload onFileUpload={handleFileUpload} />
         {uploadedFile && (
           <div className="file-info">
-            <p>Uploaded: {uploadedFile.name}</p>
+            <p>{uploadedFile.name}</p>
+            <button
+              className="delete-button"
+              onClick={handleDeleteFile}
+              aria-label="Delete file"
+            >
+              ✕
+            </button>
           </div>
         )}
       </main>
