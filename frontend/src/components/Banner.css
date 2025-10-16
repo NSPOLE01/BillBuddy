@@ -1,13 +1,13 @@
 .banner {
   position: fixed;
-  top: 0;
+  top: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #f59e0b;
+  background-color: #dc2626;
   color: white;
   padding: 1rem 3rem 1rem 1.5rem;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -17,10 +17,12 @@
 
 @keyframes slideDown {
   from {
-    transform: translateX(-50%) translateY(-100%);
+    transform: translateX(-50%) translateY(-150%);
+    opacity: 0;
   }
   to {
     transform: translateX(-50%) translateY(0);
+    opacity: 1;
   }
 }
 

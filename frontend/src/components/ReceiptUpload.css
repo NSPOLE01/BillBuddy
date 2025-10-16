@@ -28,6 +28,9 @@
 .upload-area.disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.upload-area.disabled * {
   pointer-events: none;
 }
 

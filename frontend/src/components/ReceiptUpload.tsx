@@ -4,9 +4,10 @@ import './ReceiptUpload.css'
 interface ReceiptUploadProps {
   onFileUpload: (file: File) => void
   disabled?: boolean
+  onDisabledClick?: () => void
 }
 
-export default function ReceiptUpload({ onFileUpload, disabled = false }: ReceiptUploadProps) {
+export default function ReceiptUpload({ onFileUpload, disabled = false, onDisabledClick }: ReceiptUploadProps) {
   const [dragActive, setDragActive] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -68,9 +69,16 @@ export default function ReceiptUpload({ onFileUpload, disabled = false }: Receip
 
   const onButtonClick = () => {
     if (disabled) {
+      onDisabledClick?.()
       return
     }
     inputRef.current?.click()
+  }
+
+  const handleClick = () => {
+    if (disabled) {
+      onDisabledClick?.()
+    }
   }
 
   return (
@@ -81,6 +89,7 @@ export default function ReceiptUpload({ onFileUpload, disabled = false }: Receip
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
+        onClick={handleClick}
       >
         <input
           ref={inputRef}

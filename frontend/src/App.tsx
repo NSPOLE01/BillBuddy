@@ -39,7 +39,11 @@ function App() {
       )}
       <Header />
       <main className="main-content">
-        <ReceiptUpload onFileUpload={handleFileUpload} disabled={!!uploadedFile} />
+        <ReceiptUpload
+          onFileUpload={handleFileUpload}
+          disabled={!!uploadedFile}
+          onDisabledClick={() => setShowBanner(true)}
+        />
         {uploadedFile && (
           <>
             <div className="file-info">
