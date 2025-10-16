@@ -52,3 +52,18 @@
     padding: 0.4rem 0.6rem;
   }
 }
+
+@media (max-width: 480px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .app-title {
+    font-size: 1.25rem;
+  }
+
+  .theme-toggle {
+    font-size: 1.15rem;
+    padding: 0.35rem 0.55rem;
+  }
+}

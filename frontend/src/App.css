@@ -33,5 +33,31 @@
 @media (max-width: 768px) {
   .main-content {
     padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .file-info {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+  }
+
+  .file-info p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 0.75rem;
+    gap: 1rem;
+  }
+
+  .file-info {
+    padding: 0.75rem 1rem;
+  }
+
+  .file-info p {
+    font-size: 0.85rem;
+    word-break: break-word;
   }
 }

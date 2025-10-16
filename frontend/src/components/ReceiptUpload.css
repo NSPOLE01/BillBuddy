@@ -84,8 +84,13 @@
 }
 
 @media (max-width: 768px) {
+  .upload-container {
+    margin-top: 1rem;
+  }
+
   .upload-area {
     padding: 2rem 1rem;
+    border-radius: 12px;
   }
 
   .upload-icon {
@@ -98,5 +103,38 @@
 
   .upload-button {
     padding: 0.65rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-container {
+    margin-top: 0.5rem;
+  }
+
+  .upload-area {
+    padding: 1.5rem 0.75rem;
+    border-width: 2px;
+  }
+
+  .upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .upload-text {
+    font-size: 1rem;
+  }
+
+  .upload-subtext {
+    font-size: 0.9rem;
+  }
+
+  .upload-button {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .upload-hint {
+    font-size: 0.8rem;
   }
 }
