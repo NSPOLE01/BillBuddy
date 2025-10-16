@@ -1,0 +1,534 @@
+.results-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--bg-primary);
+}
+
+.results-content {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.receipt-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.merchant-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.merchant-name:hover {
+  opacity: 0.7;
+}
+
+.merchant-name-input {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+  width: 100%;
+  margin: 0 0 0.5rem 0;
+}
+
+.receipt-date {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.items-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.edit-icon-button {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.edit-icon-button:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.edit-icon-button:active {
+  transform: scale(0.95);
+}
+
+.item-name {
+  font-size: 1rem;
+  color: var(--text-primary);
+  flex: 1;
+  cursor: pointer;
+}
+
+.item-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.remove-item-button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.remove-item-button:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.remove-item-button:active {
+  transform: scale(0.95);
+}
+
+.item-name-input {
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.item-price-input {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  width: 100px;
+  text-align: right;
+}
+
+/* Remove number input spinners */
+.item-price-input::-webkit-outer-spin-button,
+.item-price-input::-webkit-inner-spin-button,
+.tip-input::-webkit-outer-spin-button,
+.tip-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.item-price-input[type="number"],
+.tip-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.totals-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.subtotal-row {
+  padding-top: 0;
+}
+
+.total-label-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.total-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.total-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.total-value-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remove-total-button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-total-button:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.remove-total-button:active {
+  transform: scale(0.95);
+}
+
+.edit-total-icon {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.edit-total-icon:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.edit-total-icon:active {
+  transform: scale(0.95);
+}
+
+.total-input {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  width: 100px;
+  text-align: right;
+}
+
+.final-total {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.final-total .total-label {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.final-total .total-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.add-tip-button,
+.add-item-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  background-color: transparent;
+  border: 2px dashed var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.add-tip-button:hover,
+.add-item-button:hover {
+  border-color: var(--accent-color);
+  background-color: var(--bg-hover);
+}
+
+.add-item-button {
+  margin-top: 1rem;
+}
+
+.tip-row {
+  margin: 0.5rem 0;
+}
+
+.tip-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tip-input {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  width: 100px;
+  text-align: right;
+}
+
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.continue-button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.continue-button:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.continue-button:active {
+  transform: translateY(0);
+}
+
+.go-back-button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.go-back-button:hover {
+  background-color: var(--bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.go-back-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .results-container {
+    padding: 1rem;
+  }
+
+  .receipt-card {
+    padding: 1.5rem;
+  }
+
+  .merchant-name {
+    font-size: 1.5rem;
+  }
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 20px var(--shadow);
+  position: relative;
+}
+
+.modal-close-x {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.modal-close-x:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.modal-message {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-proceed-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  background-color: #ef4444;
+}
+
+.modal-proceed-button:hover {
+  background-color: #dc2626;
+}
+
+@media (max-width: 480px) {
+  .results-container {
+    padding: 0.75rem;
+  }
+
+  .receipt-card {
+    padding: 1.25rem;
+  }
+
+  .merchant-name {
+    font-size: 1.35rem;
+  }
+
+  .merchant-name-input {
+    font-size: 1.35rem;
+  }
+
+  .continue-button,
+  .go-back-button {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+
+  .item-price-input,
+  .tip-input {
+    width: 80px;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+  }
+
+  .modal-proceed-button {
+    width: 100%;
+  }
+}

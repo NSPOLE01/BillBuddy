@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { processReceipt } from '../services/receiptService'
 import './ReceiptProcessing.css'
 
 export default function ReceiptProcessing() {
@@ -16,6 +17,21 @@ export default function ReceiptProcessing() {
 
     const url = URL.createObjectURL(file)
     setImageUrl(url)
+
+    // Process the receipt
+    const processFile = async () => {
+      try {
+        const receipt = await processReceipt(file)
+        // Navigate to results page with receipt data
+        navigate('/results', { state: { receipt } })
+      } catch (error) {
+        console.error('Error processing receipt:', error)
+        // TODO: Show error message to user
+        navigate('/')
+      }
+    }
+
+    processFile()
 
     return () => {
       URL.revokeObjectURL(url)

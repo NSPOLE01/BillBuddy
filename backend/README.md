@@ -1,30 +1,66 @@
 # BillBuddy Backend
 
-AWS-based serverless backend for receipt processing and bill splitting.
+Express server with AWS Textract integration for receipt processing.
 
-## Architecture
+## Setup
 
-- **AWS Textract**: Extract text and data from receipt images
-- **AWS Lambda**: Serverless compute for business logic
-- **AWS S3**: Store receipt images
-- **AWS API Gateway**: RESTful API endpoints
-- **Amazon DynamoDB**: Store receipts, items, and split information
+1. Install dependencies:
+```bash
+npm install
+```
 
-## Folder Structure
+2. Configure AWS credentials:
+   - Copy `.env.example` to `.env`
+   - Add your AWS credentials:
+     - `AWS_ACCESS_KEY_ID`
+     - `AWS_SECRET_ACCESS_KEY`
+     - `AWS_REGION` (default: us-east-1)
 
-- **functions/**: Lambda function handlers
-  - `uploadReceipt/`: Handle receipt upload to S3
-  - `processReceipt/`: Process receipt with Textract
-  - `createSplit/`: Create and manage bill splits
-  - `getReceipts/`: Retrieve receipt history
+3. Make sure you have AWS Textract permissions enabled for your IAM user/role
 
-- **services/**: Business logic
-  - `textractService.ts`: Textract integration
-  - `receiptParser.ts`: Parse Textract output into structured data
-  - `splitCalculator.ts`: Calculate bill splits
+## Development
 
-- **infrastructure/**: IaC templates for AWS resources
+Run the development server:
+```bash
+npm run dev
+```
 
-- **types/**: Shared TypeScript types
+The server will start on http://localhost:3001
 
-- **utils/**: Helper functions
+## API Endpoints
+
+### POST /api/process-receipt
+Process a receipt image with AWS Textract
+
+**Request:**
+- Method: POST
+- Content-Type: multipart/form-data
+- Body: FormData with 'receipt' file field
+
+**Response:**
+```json
+{
+  "receipt": {
+    "id": "uuid",
+    "merchantName": "Store Name",
+    "items": [
+      { "id": "uuid", "name": "Item", "price": 10.99 }
+    ],
+    "subtotal": 10.99,
+    "tax": 0.96,
+    "tip": 1.98,
+    "total": 13.93,
+    "date": "1/15/2025"
+  }
+}
+```
+
+## AWS Textract
+
+This backend uses AWS Textract's AnalyzeExpense API to extract:
+- Merchant/vendor name
+- Line items with names and prices
+- Tax, tip, and total amounts
+- Receipt date
+
+Make sure your AWS account has Textract enabled and you have the necessary permissions.

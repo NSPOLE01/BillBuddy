@@ -1,0 +1,70 @@
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+import multer from 'multer'
+import { TextractService } from './services/textractService'
+import { ReceiptParser } from './services/receiptParser'
+
+const app = express()
+const port = process.env.PORT || 3001
+
+// Middleware
+app.use(cors())
+app.use(express.json())
+
+// Configure multer for file uploads (memory storage)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept images only
+    if (!file.mimetype.startsWith('image/')) {
+      cb(new Error('Only image files are allowed'))
+      return
+    }
+    cb(null, true)
+  },
+})
+
+// Initialize services
+const textractService = new TextractService()
+const receiptParser = new ReceiptParser()
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
+
+// Process receipt endpoint
+app.post('/api/process-receipt', upload.single('receipt'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' })
+    }
+
+    console.log('Processing receipt:', req.file.originalname)
+
+    // Analyze receipt with Textract
+    const textractResponse = await textractService.analyzeReceipt(req.file.buffer)
+
+    // Parse Textract response into structured receipt data
+    const receipt = receiptParser.parseTextractResponse(textractResponse)
+
+    console.log('Receipt processed successfully:', receipt.id)
+
+    res.json({ receipt })
+  } catch (error) {
+    console.error('Error processing receipt:', error)
+    res.status(500).json({
+      error: 'Failed to process receipt',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
+  }
+})
+
+app.listen(port, () => {
+  console.log(`BillBuddy backend server running on port ${port}`)
+  console.log(`Health check: http://localhost:${port}/health`)
+})
