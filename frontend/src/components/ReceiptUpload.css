@@ -14,7 +14,7 @@
   cursor: pointer;
 }
 
-.upload-area:hover {
+.upload-area:hover:not(.disabled) {
   border-color: var(--accent-color);
   background-color: var(--bg-hover);
 }
@@ -23,6 +23,12 @@
   border-color: var(--accent-color);
   background-color: var(--bg-hover);
   transform: scale(1.02);
+}
+
+.upload-area.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .file-input {
@@ -75,6 +81,11 @@
 
 .upload-button:active {
   transform: translateY(0);
+}
+
+.upload-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .upload-hint {

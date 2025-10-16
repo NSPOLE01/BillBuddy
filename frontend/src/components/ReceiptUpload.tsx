@@ -3,15 +3,21 @@ import './ReceiptUpload.css'
 
 interface ReceiptUploadProps {
   onFileUpload: (file: File) => void
+  disabled?: boolean
 }
 
-export default function ReceiptUpload({ onFileUpload }: ReceiptUploadProps) {
+export default function ReceiptUpload({ onFileUpload, disabled = false }: ReceiptUploadProps) {
   const [dragActive, setDragActive] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (disabled) {
+      return
+    }
+
     if (e.type === 'dragenter' || e.type === 'dragover') {
       setDragActive(true)
     } else if (e.type === 'dragleave') {
@@ -23,6 +29,11 @@ export default function ReceiptUpload({ onFileUpload }: ReceiptUploadProps) {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
+
+    if (disabled) {
+      onFileUpload(e.dataTransfer.files[0]) // This will trigger the banner
+      return
+    }
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFile(e.dataTransfer.files[0])
@@ -56,13 +67,16 @@ export default function ReceiptUpload({ onFileUpload }: ReceiptUploadProps) {
   }
 
   const onButtonClick = () => {
+    if (disabled) {
+      return
+    }
     inputRef.current?.click()
   }
 
   return (
     <div className="upload-container">
       <div
-        className={`upload-area ${dragActive ? 'drag-active' : ''}`}
+        className={`upload-area ${dragActive ? 'drag-active' : ''} ${disabled ? 'disabled' : ''}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -74,12 +88,13 @@ export default function ReceiptUpload({ onFileUpload }: ReceiptUploadProps) {
           className="file-input"
           accept="image/*"
           onChange={handleChange}
+          disabled={disabled}
         />
         <div className="upload-content">
           <div className="upload-icon">📸</div>
           <p className="upload-text">Drag and drop your receipt here</p>
           <p className="upload-subtext">or</p>
-          <button className="upload-button" onClick={onButtonClick}>
+          <button className="upload-button" onClick={onButtonClick} disabled={disabled}>
             Choose File
           </button>
           <p className="upload-hint">Supports JPEG, PNG (Max 10MB)</p>
