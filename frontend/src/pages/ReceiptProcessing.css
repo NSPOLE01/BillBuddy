@@ -1,0 +1,145 @@
+.processing-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--bg-primary);
+  position: relative;
+}
+
+.cancel-button {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.cancel-button:active {
+  transform: translateY(0);
+}
+
+.processing-content {
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.receipt-preview {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.receipt-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.processing-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .processing-container {
+    padding: 1rem;
+  }
+
+  .processing-content {
+    gap: 1.5rem;
+  }
+
+  .cancel-button {
+    padding: 0.65rem 0.875rem;
+    font-size: 0.95rem;
+  }
+
+  .spinner {
+    width: 56px;
+    height: 56px;
+    border-width: 4px;
+  }
+
+  .processing-text {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .processing-container {
+    padding: 0.75rem;
+  }
+
+  .processing-content {
+    gap: 1rem;
+  }
+
+  .cancel-button {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border-width: 3px;
+  }
+
+  .processing-text {
+    font-size: 1.1rem;
+  }
+
+  .overlay {
+    gap: 1.5rem;
+  }
+}

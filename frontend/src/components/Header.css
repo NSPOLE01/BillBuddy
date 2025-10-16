@@ -13,6 +13,12 @@
   font-weight: 700;
   color: var(--accent-color);
   margin: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.app-title:hover {
+  opacity: 0.8;
 }
 
 .theme-toggle {
