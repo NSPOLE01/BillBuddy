@@ -13,6 +13,7 @@ export default function SignUp({ onLoginClick, onSignUpSuccess }: SignUpProps) {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [confirmationCode, setConfirmationCode] = useState('')
+  const [username, setUsername] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
@@ -25,8 +26,12 @@ export default function SignUp({ onLoginClick, onSignUpSuccess }: SignUpProps) {
     setLoading(true)
 
     try {
+      // Generate a username from email (remove @ and everything after)
+      const generatedUsername = email.split('@')[0] + Math.random().toString(36).substring(2, 6)
+      setUsername(generatedUsername)
+
       await signUp({
-        username: email,
+        username: generatedUsername,
         password: password,
         options: {
           userAttributes: {
@@ -53,7 +58,7 @@ export default function SignUp({ onLoginClick, onSignUpSuccess }: SignUpProps) {
 
     try {
       await confirmSignUp({
-        username: email,
+        username: username,
         confirmationCode: confirmationCode,
       })
       setSuccess('Email confirmed! You can now log in.')
