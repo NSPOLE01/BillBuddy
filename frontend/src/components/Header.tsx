@@ -59,6 +59,11 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
     setShowDropdown(false)
   }
 
+  const handleReceiptClick = () => {
+    navigate('/')
+    setShowDropdown(false)
+  }
+
   const handleSignOut = async () => {
     try {
       await signOut()
@@ -93,6 +98,16 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
               </div>
             )}
           </div>
+        )}
+        {isAuthenticated && (
+          <button
+            className="receipt-button"
+            onClick={handleReceiptClick}
+            aria-label="Process receipt"
+            title="Process Receipt"
+          >
+            🧾
+          </button>
         )}
         {isAuthenticated && (
           <button
