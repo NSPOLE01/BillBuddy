@@ -405,6 +405,7 @@ export default function ReceiptResults() {
               </div>
             ) : (
               <div className="tip-options">
+                <span className="tip-label-text">Tip</span>
                 <div className="tip-percentage-buttons">
                   <button className="tip-percentage-button" onClick={() => handleTipPercentage(10)}>
                     10%
@@ -418,10 +419,10 @@ export default function ReceiptResults() {
                   <button className="tip-percentage-button" onClick={() => handleTipPercentage(25)}>
                     25%
                   </button>
+                  <button className="tip-percentage-button" onClick={() => { handleAddTip(); handleTipEditStart(); }}>
+                    Custom
+                  </button>
                 </div>
-                <button className="add-tip-button" onClick={() => { handleAddTip(); handleTipEditStart(); }}>
-                  Custom Amount
-                </button>
               </div>
             )}
             <div className="total-row final-total">
