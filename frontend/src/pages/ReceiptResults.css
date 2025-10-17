@@ -327,6 +327,40 @@
   margin: 0.5rem 0;
 }
 
+.tip-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.tip-percentage-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.tip-percentage-button {
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tip-percentage-button:hover {
+  border-color: var(--accent-color);
+  background-color: var(--bg-hover);
+}
+
+.tip-percentage-button:active {
+  transform: scale(0.95);
+}
+
 .tip-input-group {
   display: flex;
   align-items: center;
@@ -522,6 +556,15 @@
   .item-price-input,
   .tip-input {
     width: 80px;
+  }
+
+  .tip-percentage-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tip-percentage-button {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.9rem;
   }
 
   .modal-content {

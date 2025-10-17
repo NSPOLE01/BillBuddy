@@ -72,6 +72,13 @@ export default function ReceiptResults() {
 
   const handleAddTip = () => {
     setTip(0)
+    setEditingTip(false)
+  }
+
+  const handleTipPercentage = (percentage: number) => {
+    const tipAmount = subtotal * (percentage / 100)
+    setTip(tipAmount)
+    setEditingTip(false)
   }
 
   const handleTipChange = (newTip: string) => {
@@ -397,9 +404,25 @@ export default function ReceiptResults() {
                 </div>
               </div>
             ) : (
-              <button className="add-tip-button" onClick={() => { handleAddTip(); handleTipEditStart(); }}>
-                + Add Tip
-              </button>
+              <div className="tip-options">
+                <div className="tip-percentage-buttons">
+                  <button className="tip-percentage-button" onClick={() => handleTipPercentage(10)}>
+                    10%
+                  </button>
+                  <button className="tip-percentage-button" onClick={() => handleTipPercentage(15)}>
+                    15%
+                  </button>
+                  <button className="tip-percentage-button" onClick={() => handleTipPercentage(20)}>
+                    20%
+                  </button>
+                  <button className="tip-percentage-button" onClick={() => handleTipPercentage(25)}>
+                    25%
+                  </button>
+                </div>
+                <button className="add-tip-button" onClick={() => { handleAddTip(); handleTipEditStart(); }}>
+                  Custom Amount
+                </button>
+              </div>
             )}
             <div className="total-row final-total">
               <span className="total-label">Total</span>
