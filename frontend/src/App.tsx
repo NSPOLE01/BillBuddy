@@ -9,6 +9,7 @@ import SignUp from './components/SignUp'
 import Home from './pages/Home'
 import ReceiptProcessing from './pages/ReceiptProcessing'
 import ReceiptResults from './pages/ReceiptResults'
+import SpendingPatterns from './pages/SpendingPatterns'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -84,6 +85,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/process" element={<ReceiptProcessing />} />
           <Route path="/results" element={<ReceiptResults />} />
+          <Route path="/spending-patterns" element={<SpendingPatterns />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

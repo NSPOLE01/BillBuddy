@@ -54,6 +54,11 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
     navigate('/')
   }
 
+  const handleChartClick = () => {
+    navigate('/spending-patterns')
+    setShowDropdown(false)
+  }
+
   const handleSignOut = async () => {
     try {
       await signOut()
@@ -89,10 +94,21 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
             )}
           </div>
         )}
+        {isAuthenticated && (
+          <button
+            className="chart-button"
+            onClick={handleChartClick}
+            aria-label="View spending patterns"
+            title="Spending Patterns"
+          >
+            📈
+          </button>
+        )}
         <button
           className="theme-toggle"
           onClick={toggleTheme}
           aria-label="Toggle theme"
+          title="Change Mode"
         >
           {theme === 'light' ? '🌙' : '☀️'}
         </button>
