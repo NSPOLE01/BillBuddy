@@ -1,11 +1,77 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { getCurrentUser } from 'aws-amplify/auth'
 import './App.css'
+import './aws-config'
 import Header from './components/Header'
+import Login from './components/Login'
+import SignUp from './components/SignUp'
 import Home from './pages/Home'
 import ReceiptProcessing from './pages/ReceiptProcessing'
 import ReceiptResults from './pages/ReceiptResults'
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [showSignUp, setShowSignUp] = useState(false)
+
+  useEffect(() => {
+    checkAuthStatus()
+  }, [])
+
+  const checkAuthStatus = async () => {
+    try {
+      await getCurrentUser()
+      setIsAuthenticated(true)
+    } catch {
+      setIsAuthenticated(false)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true)
+  }
+
+  const handleSignUpSuccess = () => {
+    setShowSignUp(false)
+  }
+
+  if (isLoading) {
+    return (
+      <BrowserRouter>
+        <div className="app">
+          <Header />
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+            <p>Loading...</p>
+          </div>
+        </div>
+      </BrowserRouter>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <BrowserRouter>
+        <div className="app">
+          <Header />
+          {showSignUp ? (
+            <SignUp
+              onLoginClick={() => setShowSignUp(false)}
+              onSignUpSuccess={handleSignUpSuccess}
+            />
+          ) : (
+            <Login
+              onSignUpClick={() => setShowSignUp(true)}
+              onLoginSuccess={handleLoginSuccess}
+            />
+          )}
+        </div>
+      </BrowserRouter>
+    )
+  }
+
   return (
     <BrowserRouter>
       <div className="app">
@@ -14,6 +80,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/process" element={<ReceiptProcessing />} />
           <Route path="/results" element={<ReceiptResults />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </BrowserRouter>
