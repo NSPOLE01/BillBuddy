@@ -60,6 +60,7 @@ export class ReceiptParser {
 
         let itemName = ''
         let itemPrice = 0
+        let itemQuantity: number | undefined
 
         for (const field of fields) {
           const fieldType = field.Type?.Text?.toLowerCase() || ''
@@ -69,6 +70,11 @@ export class ReceiptParser {
             itemName = fieldValue
           } else if (fieldType.includes('price') || fieldType.includes('amount')) {
             itemPrice = this.parsePrice(fieldValue)
+          } else if (fieldType.includes('quantity') || fieldType.includes('qty')) {
+            const qty = parseInt(fieldValue)
+            if (!isNaN(qty) && qty > 0) {
+              itemQuantity = qty
+            }
           }
         }
 
@@ -77,6 +83,7 @@ export class ReceiptParser {
             id: uuidv4(),
             name: itemName,
             price: itemPrice,
+            quantity: itemQuantity,
           })
         }
       }

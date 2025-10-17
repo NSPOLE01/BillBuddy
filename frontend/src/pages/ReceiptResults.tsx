@@ -50,6 +50,17 @@ export default function ReceiptResults() {
     setItems(items.map(item => item.id === id ? { ...item, name: newName } : item))
   }
 
+  const handleItemQuantityChange = (id: string, newQuantity: string) => {
+    if (newQuantity === '') {
+      setItems(items.map(item => item.id === id ? { ...item, quantity: undefined } : item))
+    } else {
+      const qty = parseInt(newQuantity)
+      if (!isNaN(qty) && qty > 0) {
+        setItems(items.map(item => item.id === id ? { ...item, quantity: qty } : item))
+      }
+    }
+  }
+
   const handleItemPriceChange = (id: string, newPrice: string) => {
     // Allow only numbers and one decimal point anywhere
     const decimalCount = (newPrice.match(/\./g) || []).length
@@ -262,6 +273,14 @@ export default function ReceiptResults() {
                         autoFocus
                       />
                       <input
+                        type="number"
+                        className="item-quantity-input"
+                        value={item.quantity || 1}
+                        onChange={(e) => handleItemQuantityChange(item.id, e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleItemPriceEditEnd()}
+                        min="1"
+                      />
+                      <input
                         type="text"
                         inputMode="decimal"
                         className="item-price-input"
@@ -274,6 +293,7 @@ export default function ReceiptResults() {
                     <>
                       <span className="item-name" onClick={() => handleItemPriceEditStart(item.id, item.price)}>
                         {item.name}
+                        <span className="item-quantity"> x{item.quantity || 1}</span>
                       </span>
                       <span className="item-price" onClick={() => handleItemPriceEditStart(item.id, item.price)}>
                         ${item.price.toFixed(2)}

@@ -114,6 +114,13 @@
   cursor: pointer;
 }
 
+.item-quantity {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
 .item-price {
   font-size: 1rem;
   font-weight: 600;
@@ -155,6 +162,18 @@
   min-width: 0;
 }
 
+.item-quantity-input {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  width: 60px;
+  text-align: center;
+}
+
 .item-price-input {
   font-size: 1rem;
   font-weight: 600;
@@ -170,6 +189,8 @@
 /* Remove number input spinners */
 .item-price-input::-webkit-outer-spin-button,
 .item-price-input::-webkit-inner-spin-button,
+.item-quantity-input::-webkit-outer-spin-button,
+.item-quantity-input::-webkit-inner-spin-button,
 .tip-input::-webkit-outer-spin-button,
 .tip-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -177,6 +198,7 @@
 }
 
 .item-price-input[type="number"],
+.item-quantity-input[type="number"],
 .tip-input[type="number"] {
   -moz-appearance: textfield;
 }
