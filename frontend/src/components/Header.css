@@ -21,6 +21,72 @@
   opacity: 0.8;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-email {
+  background: none;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.user-menu.open .user-email {
+  border-radius: 8px 8px 0 0;
+  border-bottom-color: transparent;
+}
+
+.user-email:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--accent-color);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px var(--shadow);
+  z-index: 1000;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: center;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent-color);
+  border: none;
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: var(--accent-hover);
+}
+
 .theme-toggle {
   background: none;
   border: 2px solid var(--border-color);

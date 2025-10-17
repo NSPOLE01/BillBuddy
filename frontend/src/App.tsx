@@ -38,11 +38,15 @@ function App() {
     setShowSignUp(false)
   }
 
+  const handleSignOut = () => {
+    setIsAuthenticated(false)
+  }
+
   if (isLoading) {
     return (
       <BrowserRouter>
         <div className="app">
-          <Header />
+          <Header isAuthenticated={false} />
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <p>Loading...</p>
           </div>
@@ -55,7 +59,7 @@ function App() {
     return (
       <BrowserRouter>
         <div className="app">
-          <Header />
+          <Header isAuthenticated={false} />
           {showSignUp ? (
             <SignUp
               onLoginClick={() => setShowSignUp(false)}
@@ -75,7 +79,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app">
-        <Header />
+        <Header isAuthenticated={true} onSignOut={handleSignOut} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/process" element={<ReceiptProcessing />} />
