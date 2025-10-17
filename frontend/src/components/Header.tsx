@@ -42,7 +42,6 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
     try {
       const user = await getCurrentUser()
       const attributes = await getCurrentUser()
-      // The email is stored in the user attributes
       const userInfo = await getCurrentUser()
       setUserEmail(userInfo.signInDetails?.loginId || 'User')
     } catch (error) {
