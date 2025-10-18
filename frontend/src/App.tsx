@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { getCurrentUser } from 'aws-amplify/auth'
+import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth'
 import './App.css'
 import './aws-config'
 import Header from './components/Header'
@@ -22,6 +22,8 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
+      // Check for OAuth redirect
+      await fetchAuthSession()
       await getCurrentUser()
       setIsAuthenticated(true)
     } catch {

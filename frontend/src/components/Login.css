@@ -149,6 +149,35 @@
   background-color: var(--bg-hover);
 }
 
+.google-button {
+  padding: 0.875rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.google-button:hover {
+  border-color: var(--accent-color);
+  background-color: var(--bg-hover);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.google-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
 @media (max-width: 480px) {
   .auth-container {
     padding: 1rem;
