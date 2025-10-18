@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
-import { getCurrentUser, signOut } from 'aws-amplify/auth'
+import { getCurrentUser, signOut, fetchAuthSession } from 'aws-amplify/auth'
 import './Header.css'
 
 interface HeaderProps {
@@ -40,12 +40,21 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
 
   const fetchUserEmail = async () => {
     try {
+      // Get the auth session which contains ID token with user claims
+      const session = await fetchAuthSession()
+      const idToken = session.tokens?.idToken
+
+      if (idToken?.payload?.email) {
+        setUserEmail(idToken.payload.email as string)
+        return
+      }
+
+      // Fallback to loginId for email/password users
       const user = await getCurrentUser()
-      const attributes = await getCurrentUser()
-      const userInfo = await getCurrentUser()
-      setUserEmail(userInfo.signInDetails?.loginId || 'User')
+      setUserEmail(user.signInDetails?.loginId || 'User')
     } catch (error) {
       console.error('Error fetching user:', error)
+      setUserEmail('User')
     }
   }
 
