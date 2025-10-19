@@ -40,7 +40,6 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
 
   const fetchUserEmail = async () => {
     try {
-      // Get the auth session which contains ID token with user claims
       const session = await fetchAuthSession()
       const idToken = session.tokens?.idToken
 
