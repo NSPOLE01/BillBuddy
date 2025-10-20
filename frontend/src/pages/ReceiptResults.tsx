@@ -455,7 +455,7 @@ export default function ReceiptResults() {
         <div className="button-group">
           <button
             className="continue-button"
-            onClick={() => navigate('/split-bill', {
+            onClick={() => navigate('/list-group', {
               state: {
                 receipt: {
                   merchantName,
@@ -467,7 +467,7 @@ export default function ReceiptResults() {
               }
             })}
           >
-            Continue to Split Bill
+            Create My Group
           </button>
           <button className="go-back-button" onClick={() => navigate(-1)}>
             Go Back

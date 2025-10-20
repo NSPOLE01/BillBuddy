@@ -10,7 +10,9 @@ import Home from './pages/Home'
 import ReceiptProcessing from './pages/ReceiptProcessing'
 import ReceiptResults from './pages/ReceiptResults'
 import SpendingPatterns from './pages/SpendingPatterns'
+import ListGroup from './pages/ListGroup'
 import SplitBill from './pages/SplitBill'
+import FinalTab from './pages/FinalTab'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -82,7 +84,9 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/process" element={<ReceiptProcessing />} />
                 <Route path="/results" element={<ReceiptResults />} />
+                <Route path="/list-group" element={<ListGroup />} />
                 <Route path="/split-bill" element={<SplitBill />} />
+                <Route path="/final-tab" element={<FinalTab />} />
                 <Route path="/login" element={
                   <Login
                     onSignUpClick={() => setShowSignUp(true)}
@@ -106,7 +110,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/process" element={<ReceiptProcessing />} />
           <Route path="/results" element={<ReceiptResults />} />
+          <Route path="/list-group" element={<ListGroup />} />
           <Route path="/split-bill" element={<SplitBill />} />
+          <Route path="/final-tab" element={<FinalTab />} />
           <Route path="/spending-patterns" element={<SpendingPatterns />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -14,25 +14,35 @@ interface ItemAssignment {
   isEveryone?: boolean // Flag to track if explicitly assigned to everyone
 }
 
+interface SplitBillState {
+  receipt: Receipt
+  people: Person[]
+  assignments?: ItemAssignment[]
+}
+
 export default function SplitBill() {
   const location = useLocation()
   const navigate = useNavigate()
-  const receipt = location.state?.receipt as Receipt | undefined
+  const state = location.state as SplitBillState | undefined
+
+  const receipt = state?.receipt
+  const initialPeople = state?.people || []
+  const initialAssignments = state?.assignments || []
 
   const [selectedItems, setSelectedItems] = useState<string[]>([])
-  const [people, setPeople] = useState<Person[]>([])
-  const [assignments, setAssignments] = useState<ItemAssignment[]>([])
+  const [people] = useState<Person[]>(initialPeople)
+  const [assignments, setAssignments] = useState<ItemAssignment[]>(initialAssignments)
   const [showAssignModal, setShowAssignModal] = useState(false)
-  const [personName, setPersonName] = useState('')
+  const [selectedPersonId, setSelectedPersonId] = useState<string>('')
   const [assignToEveryone, setAssignToEveryone] = useState(false)
-  const [showFinalTab, setShowFinalTab] = useState(false)
+  const [showWarningBanner, setShowWarningBanner] = useState(false)
 
   useEffect(() => {
-    if (!receipt) {
-      navigate('/results')
+    if (!receipt || people.length === 0) {
+      navigate('/list-group')
       return
     }
-  }, [receipt, navigate])
+  }, [receipt, people, navigate])
 
   if (!receipt) {
     return null
@@ -54,12 +64,6 @@ export default function SplitBill() {
   const handleAssignItems = () => {
     if (assignToEveryone) {
       // Split among all people
-      if (people.length === 0) {
-        setShowAssignModal(false)
-        setSelectedItems([])
-        return
-      }
-
       // Build updated assignments array
       let updatedAssignments = [...assignments]
       const allPersonIds = people.map(p => p.id)
@@ -86,20 +90,7 @@ export default function SplitBill() {
       setAssignments(updatedAssignments)
     } else {
       // Assign to specific person
-      if (personName.trim() === '') return
-
-      let person = people.find(p => p.name.toLowerCase() === personName.trim().toLowerCase())
-      let updatedPeople = [...people]
-
-      if (!person) {
-        // Create new person
-        person = {
-          id: `person-${Date.now()}`,
-          name: personName.trim()
-        }
-        updatedPeople.push(person)
-        setPeople(updatedPeople)
-      }
+      if (!selectedPersonId) return
 
       // Build updated assignments array
       let updatedAssignments = [...assignments]
@@ -111,15 +102,15 @@ export default function SplitBill() {
           if (updatedAssignments[existingIndex].isEveryone) {
             updatedAssignments[existingIndex] = {
               itemId,
-              personIds: [person!.id],
+              personIds: [selectedPersonId],
               isEveryone: false
             }
           } else {
             // Add person to existing assignment if not already there
-            if (!updatedAssignments[existingIndex].personIds.includes(person!.id)) {
+            if (!updatedAssignments[existingIndex].personIds.includes(selectedPersonId)) {
               updatedAssignments[existingIndex] = {
                 ...updatedAssignments[existingIndex],
-                personIds: [...updatedAssignments[existingIndex].personIds, person!.id],
+                personIds: [...updatedAssignments[existingIndex].personIds, selectedPersonId],
                 isEveryone: false
               }
             }
@@ -128,7 +119,7 @@ export default function SplitBill() {
           // Create new assignment
           updatedAssignments.push({
             itemId,
-            personIds: [person!.id],
+            personIds: [selectedPersonId],
             isEveryone: false
           })
         }
@@ -140,7 +131,7 @@ export default function SplitBill() {
     // Reset
     setShowAssignModal(false)
     setSelectedItems([])
-    setPersonName('')
+    setSelectedPersonId('')
     setAssignToEveryone(false)
   }
 
@@ -203,8 +194,26 @@ export default function SplitBill() {
   const subtotal = receipt.items.reduce((sum, item) => sum + item.price, 0)
   const total = subtotal + receipt.tax + (receipt.tip || 0)
 
+  const allItemsAssigned = receipt.items.every(item =>
+    assignments.some(a => a.itemId === item.id)
+  )
+
+  const handleViewFinalTab = () => {
+    if (!allItemsAssigned) {
+      setShowWarningBanner(true)
+      setTimeout(() => setShowWarningBanner(false), 3000)
+      return
+    }
+    navigate('/final-tab', { state: { receipt, people, assignments } })
+  }
+
   return (
     <main className="results-container">
+      {showWarningBanner && (
+        <div className="warning-banner">
+          Please assign all items before proceeding
+        </div>
+      )}
       <div className="results-content">
         {/* Receipt Card */}
         <div className="receipt-card">
@@ -304,7 +313,10 @@ export default function SplitBill() {
 
         <div className="button-group">
           {people.length > 0 && (
-            <button className="view-final-tab-button" onClick={() => setShowFinalTab(true)}>
+            <button
+              className={`view-final-tab-button ${!allItemsAssigned ? 'disabled' : ''}`}
+              onClick={handleViewFinalTab}
+            >
               View Final Tab
             </button>
           )}
@@ -345,15 +357,19 @@ export default function SplitBill() {
               </div>
 
               {!assignToEveryone && (
-                <input
-                  type="text"
-                  className="person-input"
-                  placeholder="Enter person's name"
-                  value={personName}
-                  onChange={(e) => setPersonName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAssignItems()}
+                <select
+                  className="person-select"
+                  value={selectedPersonId}
+                  onChange={(e) => setSelectedPersonId(e.target.value)}
                   autoFocus
-                />
+                >
+                  <option value="">Select a person...</option>
+                  {people.map(person => (
+                    <option key={person.id} value={person.id}>
+                      {person.name}
+                    </option>
+                  ))}
+                </select>
               )}
 
               <div className="assign-option">
@@ -371,38 +387,10 @@ export default function SplitBill() {
             <button
               className="modal-assign-button"
               onClick={handleAssignItems}
-              disabled={!assignToEveryone && personName.trim() === ''}
+              disabled={!assignToEveryone && !selectedPersonId}
             >
               Assign
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Final Tab Modal */}
-      {showFinalTab && (
-        <div className="modal-overlay" onClick={() => setShowFinalTab(false)}>
-          <div className="modal-content final-tab-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-x" onClick={() => setShowFinalTab(false)}>
-              ✕
-            </button>
-            <h3 className="modal-title">Final Tab</h3>
-
-            <div className="final-tab-content">
-              {people.map(person => {
-                const personTotal = calculatePersonTotal(person.id)
-                return (
-                  <div key={person.id} className="final-tab-row">
-                    <span className="final-tab-person-name">{person.name}</span>
-                    <span className="final-tab-amount">${personTotal.toFixed(2)}</span>
-                  </div>
-                )
-              })}
-              <div className="final-tab-total-row">
-                <span className="final-tab-total-label">Total</span>
-                <span className="final-tab-total-value">${total.toFixed(2)}</span>
-              </div>
-            </div>
           </div>
         </div>
       )}

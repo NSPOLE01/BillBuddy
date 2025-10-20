@@ -1,0 +1,159 @@
+.final-tab-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--bg-primary);
+}
+
+.final-tab-content {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.final-tab-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.final-tab-merchant {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.final-tab-date {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.final-tab-section {
+  margin-bottom: 2rem;
+}
+
+.final-tab-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.final-tab-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.final-tab-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.final-tab-person-name {
+  font-weight: 600;
+  color: var(--accent-color);
+  font-size: 1.1rem;
+}
+
+.final-tab-amount {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.final-tab-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--accent-color);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.final-tab-total-label {
+  font-weight: 700;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.final-tab-total-value {
+  font-weight: 700;
+  color: white;
+  font-size: 1.3rem;
+}
+
+.final-tab-back-button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.final-tab-back-button:hover {
+  background-color: var(--bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.final-tab-back-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .final-tab-container {
+    padding: 1rem;
+  }
+
+  .final-tab-card {
+    padding: 1.5rem;
+  }
+
+  .final-tab-merchant {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .final-tab-container {
+    padding: 0.75rem;
+  }
+
+  .final-tab-card {
+    padding: 1.25rem;
+  }
+
+  .final-tab-merchant {
+    font-size: 1.35rem;
+  }
+
+  .final-tab-back-button {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+}

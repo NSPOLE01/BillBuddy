@@ -1,0 +1,235 @@
+.list-group-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--bg-primary);
+}
+
+.list-group-content {
+  max-width: 600px;
+  width: 100%;
+}
+
+.list-group-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.list-group-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.list-group-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.add-person-section {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.person-name-input {
+  flex: 1;
+  padding: 0.875rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.person-name-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.add-person-button {
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.add-person-button:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.add-person-button:active {
+  transform: translateY(0);
+}
+
+.people-list-section {
+  margin-bottom: 2rem;
+}
+
+.people-list-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.people-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.person-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.person-item:hover {
+  border-color: var(--accent-color);
+}
+
+.person-item-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.remove-person-button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 4px;
+}
+
+.remove-person-button:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+}
+
+.remove-person-button:active {
+  transform: scale(0.95);
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.continue-split-button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.continue-split-button:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.continue-split-button:active {
+  transform: translateY(0);
+}
+
+.go-back-button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.go-back-button:hover {
+  background-color: var(--bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.go-back-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .list-group-container {
+    padding: 1rem;
+  }
+
+  .list-group-card {
+    padding: 1.5rem;
+  }
+
+  .list-group-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .list-group-container {
+    padding: 0.75rem;
+  }
+
+  .list-group-card {
+    padding: 1.25rem;
+  }
+
+  .list-group-title {
+    font-size: 1.35rem;
+  }
+
+  .add-person-section {
+    flex-direction: column;
+  }
+
+  .continue-split-button,
+  .go-back-button {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+}

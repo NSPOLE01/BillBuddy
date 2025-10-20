@@ -121,7 +121,7 @@
   flex: 1;
 }
 
-.person-input {
+.person-select {
   width: 100%;
   padding: 0.75rem;
   border: 2px solid var(--border-color);
@@ -130,9 +130,10 @@
   color: var(--text-primary);
   font-size: 1rem;
   margin-top: 0.5rem;
+  cursor: pointer;
 }
 
-.person-input:focus {
+.person-select:focus {
   outline: none;
   border-color: var(--accent-color);
 }
@@ -223,6 +224,34 @@
   transform: scale(1.1);
 }
 
+/* Warning Banner */
+.warning-banner {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--accent-color);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
 /* View Final Tab Button */
 .view-final-tab-button {
   padding: 0.875rem 1.75rem;
@@ -241,57 +270,13 @@
   transform: translateY(-2px);
 }
 
-/* Final Tab Modal */
-.final-tab-modal {
-  max-width: 500px !important;
+.view-final-tab-button.disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.final-tab-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.final-tab-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-}
-
-.final-tab-person-name {
-  font-weight: 600;
-  color: var(--accent-color);
-  font-size: 1.1rem;
-}
-
-.final-tab-amount {
-  font-weight: 700;
-  color: var(--text-primary);
-  font-size: 1.2rem;
-}
-
-.final-tab-total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: var(--accent-color);
-  border-radius: 8px;
-  margin-top: 0.5rem;
-}
-
-.final-tab-total-label {
-  font-weight: 700;
-  color: white;
-  font-size: 1.2rem;
-}
-
-.final-tab-total-value {
-  font-weight: 700;
-  color: white;
-  font-size: 1.3rem;
+.view-final-tab-button.disabled:hover {
+  background-color: #9ca3af;
+  transform: none;
 }
