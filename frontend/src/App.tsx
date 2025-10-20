@@ -58,21 +58,38 @@ function App() {
     )
   }
 
+  const handleShowAuth = () => {
+    setShowSignUp(true)
+  }
+
   if (!isAuthenticated) {
     return (
       <BrowserRouter>
         <div className="app">
-          <Header isAuthenticated={false} />
           {showSignUp ? (
-            <SignUp
-              onLoginClick={() => setShowSignUp(false)}
-              onSignUpSuccess={handleSignUpSuccess}
-            />
+            <>
+              <Header isAuthenticated={false} />
+              <SignUp
+                onLoginClick={() => setShowSignUp(false)}
+                onSignUpSuccess={handleSignUpSuccess}
+              />
+            </>
           ) : (
-            <Login
-              onSignUpClick={() => setShowSignUp(true)}
-              onLoginSuccess={handleLoginSuccess}
-            />
+            <>
+              <Header isAuthenticated={false} onShowAuth={handleShowAuth} />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/process" element={<ReceiptProcessing />} />
+                <Route path="/results" element={<ReceiptResults />} />
+                <Route path="/login" element={
+                  <Login
+                    onSignUpClick={() => setShowSignUp(true)}
+                    onLoginSuccess={handleLoginSuccess}
+                  />
+                } />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </>
           )}
         </div>
       </BrowserRouter>

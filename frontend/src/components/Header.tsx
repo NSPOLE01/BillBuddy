@@ -2,18 +2,21 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { getCurrentUser, signOut, fetchAuthSession } from 'aws-amplify/auth'
+import AuthModal from './AuthModal'
 import './Header.css'
 
 interface HeaderProps {
   isAuthenticated?: boolean
   onSignOut?: () => void
+  onShowAuth?: () => void
 }
 
-export default function Header({ isAuthenticated = false, onSignOut }: HeaderProps) {
+export default function Header({ isAuthenticated = false, onSignOut, onShowAuth }: HeaderProps) {
   const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [showDropdown, setShowDropdown] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -62,8 +65,19 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
   }
 
   const handleChartClick = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true)
+      return
+    }
     navigate('/spending-patterns')
     setShowDropdown(false)
+  }
+
+  const handleCreateAccount = () => {
+    setShowAuthModal(false)
+    if (onShowAuth) {
+      onShowAuth()
+    }
   }
 
   const handleReceiptClick = () => {
@@ -84,10 +98,17 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
   }
 
   return (
-    <header className="header">
-      <h1 className="app-title" onClick={handleTitleClick}>
-        Bill Buddy
-      </h1>
+    <>
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          onCreateAccount={handleCreateAccount}
+        />
+      )}
+      <header className="header">
+        <h1 className="app-title" onClick={handleTitleClick}>
+          Bill Buddy
+        </h1>
       <div className="header-actions">
         {isAuthenticated && userEmail && (
           <div className={`user-menu ${showDropdown ? 'open' : ''}`}>
@@ -106,26 +127,22 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
             )}
           </div>
         )}
-        {isAuthenticated && (
-          <button
-            className="receipt-button"
-            onClick={handleReceiptClick}
-            aria-label="Process receipt"
-            title="Process Receipt"
-          >
-            🧾
-          </button>
-        )}
-        {isAuthenticated && (
-          <button
-            className="chart-button"
-            onClick={handleChartClick}
-            aria-label="View spending patterns"
-            title="Spending Patterns"
-          >
-            📈
-          </button>
-        )}
+        <button
+          className="receipt-button"
+          onClick={handleReceiptClick}
+          aria-label="Process receipt"
+          title="Process Receipt"
+        >
+          🧾
+        </button>
+        <button
+          className="chart-button"
+          onClick={handleChartClick}
+          aria-label="View spending patterns"
+          title="Spending Patterns"
+        >
+          📈
+        </button>
         <button
           className="theme-toggle"
           onClick={toggleTheme}
@@ -136,5 +153,6 @@ export default function Header({ isAuthenticated = false, onSignOut }: HeaderPro
         </button>
       </div>
     </header>
+    </>
   )
 }
