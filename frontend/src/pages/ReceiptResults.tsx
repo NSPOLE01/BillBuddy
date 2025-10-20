@@ -453,7 +453,20 @@ export default function ReceiptResults() {
         </div>
 
         <div className="button-group">
-          <button className="continue-button" onClick={() => console.log('Continue to splitting')}>
+          <button
+            className="continue-button"
+            onClick={() => navigate('/split-bill', {
+              state: {
+                receipt: {
+                  merchantName,
+                  items,
+                  tax,
+                  tip,
+                  date: initialReceipt.date
+                }
+              }
+            })}
+          >
             Continue to Split Bill
           </button>
           <button className="go-back-button" onClick={() => navigate(-1)}>
