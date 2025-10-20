@@ -58,28 +58,34 @@ export default function SplitBill() {
         return
       }
 
+      // Build updated assignments array
+      let updatedAssignments = [...assignments]
+      const allPersonIds = people.map(p => p.id)
+
       selectedItems.forEach(itemId => {
-        const existingAssignment = assignments.find(a => a.itemId === itemId)
-        if (existingAssignment) {
+        const existingIndex = updatedAssignments.findIndex(a => a.itemId === itemId)
+        if (existingIndex !== -1) {
           // Update existing assignment
-          setAssignments(assignments.map(a =>
-            a.itemId === itemId
-              ? { ...a, personIds: people.map(p => p.id) }
-              : a
-          ))
+          updatedAssignments[existingIndex] = {
+            ...updatedAssignments[existingIndex],
+            personIds: allPersonIds
+          }
         } else {
           // Create new assignment
-          setAssignments([...assignments, {
+          updatedAssignments.push({
             itemId,
-            personIds: people.map(p => p.id)
-          }])
+            personIds: allPersonIds
+          })
         }
       })
+
+      setAssignments(updatedAssignments)
     } else {
       // Assign to specific person
       if (personName.trim() === '') return
 
       let person = people.find(p => p.name.toLowerCase() === personName.trim().toLowerCase())
+      let updatedPeople = [...people]
 
       if (!person) {
         // Create new person
@@ -87,28 +93,33 @@ export default function SplitBill() {
           id: `person-${Date.now()}`,
           name: personName.trim()
         }
-        setPeople([...people, person])
+        updatedPeople.push(person)
+        setPeople(updatedPeople)
       }
 
+      // Build updated assignments array
+      let updatedAssignments = [...assignments]
+
       selectedItems.forEach(itemId => {
-        const existingAssignment = assignments.find(a => a.itemId === itemId)
-        if (existingAssignment) {
+        const existingIndex = updatedAssignments.findIndex(a => a.itemId === itemId)
+        if (existingIndex !== -1) {
           // Add person to existing assignment if not already there
-          if (!existingAssignment.personIds.includes(person!.id)) {
-            setAssignments(assignments.map(a =>
-              a.itemId === itemId
-                ? { ...a, personIds: [...a.personIds, person!.id] }
-                : a
-            ))
+          if (!updatedAssignments[existingIndex].personIds.includes(person!.id)) {
+            updatedAssignments[existingIndex] = {
+              ...updatedAssignments[existingIndex],
+              personIds: [...updatedAssignments[existingIndex].personIds, person!.id]
+            }
           }
         } else {
           // Create new assignment
-          setAssignments([...assignments, {
+          updatedAssignments.push({
             itemId,
             personIds: [person!.id]
-          }])
+          })
         }
       })
+
+      setAssignments(updatedAssignments)
     }
 
     // Reset
