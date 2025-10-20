@@ -11,6 +11,7 @@ interface Person {
 interface ItemAssignment {
   itemId: string
   personIds: string[] // Can be split among multiple people
+  isEveryone?: boolean // Flag to track if explicitly assigned to everyone
 }
 
 export default function SplitBill() {
@@ -24,6 +25,7 @@ export default function SplitBill() {
   const [showAssignModal, setShowAssignModal] = useState(false)
   const [personName, setPersonName] = useState('')
   const [assignToEveryone, setAssignToEveryone] = useState(false)
+  const [showFinalTab, setShowFinalTab] = useState(false)
 
   useEffect(() => {
     if (!receipt) {
@@ -65,16 +67,18 @@ export default function SplitBill() {
       selectedItems.forEach(itemId => {
         const existingIndex = updatedAssignments.findIndex(a => a.itemId === itemId)
         if (existingIndex !== -1) {
-          // Update existing assignment
+          // Update existing assignment - replace with everyone
           updatedAssignments[existingIndex] = {
-            ...updatedAssignments[existingIndex],
-            personIds: allPersonIds
+            itemId,
+            personIds: allPersonIds,
+            isEveryone: true
           }
         } else {
           // Create new assignment
           updatedAssignments.push({
             itemId,
-            personIds: allPersonIds
+            personIds: allPersonIds,
+            isEveryone: true
           })
         }
       })
@@ -103,18 +107,29 @@ export default function SplitBill() {
       selectedItems.forEach(itemId => {
         const existingIndex = updatedAssignments.findIndex(a => a.itemId === itemId)
         if (existingIndex !== -1) {
-          // Add person to existing assignment if not already there
-          if (!updatedAssignments[existingIndex].personIds.includes(person!.id)) {
+          // If item was assigned to "everyone", replace with specific person
+          if (updatedAssignments[existingIndex].isEveryone) {
             updatedAssignments[existingIndex] = {
-              ...updatedAssignments[existingIndex],
-              personIds: [...updatedAssignments[existingIndex].personIds, person!.id]
+              itemId,
+              personIds: [person!.id],
+              isEveryone: false
+            }
+          } else {
+            // Add person to existing assignment if not already there
+            if (!updatedAssignments[existingIndex].personIds.includes(person!.id)) {
+              updatedAssignments[existingIndex] = {
+                ...updatedAssignments[existingIndex],
+                personIds: [...updatedAssignments[existingIndex].personIds, person!.id],
+                isEveryone: false
+              }
             }
           }
         } else {
           // Create new assignment
           updatedAssignments.push({
             itemId,
-            personIds: [person!.id]
+            personIds: [person!.id],
+            isEveryone: false
           })
         }
       })
@@ -133,6 +148,30 @@ export default function SplitBill() {
     const assignment = assignments.find(a => a.itemId === itemId)
     if (!assignment) return []
     return people.filter(p => assignment.personIds.includes(p.id))
+  }
+
+  const isItemAssignedToEveryone = (itemId: string): boolean => {
+    const assignment = assignments.find(a => a.itemId === itemId)
+    if (!assignment) return false
+    return assignment.isEveryone === true
+  }
+
+  const handleUnassignPerson = (itemId: string, personId: string) => {
+    setAssignments(assignments.map(a => {
+      if (a.itemId === itemId) {
+        const updatedPersonIds = a.personIds.filter(id => id !== personId)
+        // If no one is assigned, remove the assignment entirely
+        if (updatedPersonIds.length === 0) {
+          return null as any
+        }
+        return { ...a, personIds: updatedPersonIds }
+      }
+      return a
+    }).filter(a => a !== null))
+  }
+
+  const handleUnassignEveryone = (itemId: string) => {
+    setAssignments(assignments.filter(a => a.itemId !== itemId))
   }
 
   const calculatePersonTotal = (personId: string): number => {
@@ -178,25 +217,51 @@ export default function SplitBill() {
               {receipt.items.map((item) => {
                 const isSelected = selectedItems.includes(item.id)
                 const assignedPeople = getItemAssignedPeople(item.id)
+                const assignedToEveryone = isItemAssignedToEveryone(item.id)
 
                 return (
-                  <div key={item.id} className={`item-row ${isSelected ? 'item-selected' : ''}`}>
-                    <span
-                      className="item-name"
-                      onClick={() => toggleItemSelection(item.id)}
-                    >
-                      {item.name}
-                      {item.quantity && item.quantity > 1 && (
-                        <span className="item-quantity"> x{item.quantity}</span>
-                      )}
-                      {assignedPeople.length > 0 && (
-                        <span className="item-assigned-indicator">
-                          {' '}→ {assignedPeople.map(p => p.name).join(', ')}
-                          {assignedPeople.length > 1 && ` (split ${assignedPeople.length} ways)`}
-                        </span>
-                      )}
-                    </span>
-                    <span className="item-price">${item.price.toFixed(2)}</span>
+                  <div key={item.id} className="item-container">
+                    <div className={`item-row ${isSelected ? 'item-selected' : ''}`}>
+                      <span
+                        className="item-name"
+                        onClick={() => toggleItemSelection(item.id)}
+                      >
+                        {item.name}
+                        {item.quantity && item.quantity > 1 && (
+                          <span className="item-quantity"> x{item.quantity}</span>
+                        )}
+                      </span>
+                      <span className="item-price">${item.price.toFixed(2)}</span>
+                    </div>
+                    {assignedPeople.length > 0 && (
+                      <div className="assigned-people-chips">
+                        {assignedToEveryone ? (
+                          <div className="person-chip">
+                            <span className="person-chip-name">Everyone</span>
+                            <button
+                              className="person-chip-unassign"
+                              onClick={() => handleUnassignEveryone(item.id)}
+                              aria-label="Unassign Everyone"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          assignedPeople.map(person => (
+                            <div key={person.id} className="person-chip">
+                              <span className="person-chip-name">{person.name}</span>
+                              <button
+                                className="person-chip-unassign"
+                                onClick={() => handleUnassignPerson(item.id, person.id)}
+                                aria-label={`Unassign ${person.name}`}
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )}
                   </div>
                 )
               })}
@@ -237,22 +302,12 @@ export default function SplitBill() {
           </div>
         </div>
 
-        {/* Summary Section */}
-        {people.length > 0 && (
-          <div className="receipt-card">
-            <h3 className="section-title">Summary</h3>
-            <div className="summary-list">
-              {people.map(person => (
-                <div key={person.id} className="summary-row">
-                  <span className="summary-person-name">{person.name}</span>
-                  <span className="summary-amount">${calculatePersonTotal(person.id).toFixed(2)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         <div className="button-group">
+          {people.length > 0 && (
+            <button className="view-final-tab-button" onClick={() => setShowFinalTab(true)}>
+              View Final Tab
+            </button>
+          )}
           <button className="go-back-button" onClick={() => navigate(-1)}>
             Go Back
           </button>
@@ -320,6 +375,34 @@ export default function SplitBill() {
             >
               Assign
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Final Tab Modal */}
+      {showFinalTab && (
+        <div className="modal-overlay" onClick={() => setShowFinalTab(false)}>
+          <div className="modal-content final-tab-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-x" onClick={() => setShowFinalTab(false)}>
+              ✕
+            </button>
+            <h3 className="modal-title">Final Tab</h3>
+
+            <div className="final-tab-content">
+              {people.map(person => {
+                const personTotal = calculatePersonTotal(person.id)
+                return (
+                  <div key={person.id} className="final-tab-row">
+                    <span className="final-tab-person-name">{person.name}</span>
+                    <span className="final-tab-amount">${personTotal.toFixed(2)}</span>
+                  </div>
+                )
+              })}
+              <div className="final-tab-total-row">
+                <span className="final-tab-total-label">Total</span>
+                <span className="final-tab-total-value">${total.toFixed(2)}</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
