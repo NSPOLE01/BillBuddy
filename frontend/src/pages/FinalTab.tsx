@@ -89,10 +89,10 @@ export default function FinalTab() {
             </div>
           </div>
 
-          <button className="final-tab-back-button" onClick={handleGoBack}>
-            Go Back
-          </button>
         </div>
+        <button className="final-tab-back-button" onClick={handleGoBack}>
+          Go Back
+        </button>
       </div>
     </main>
   )
