@@ -13,6 +13,7 @@ import SpendingPatterns from './pages/SpendingPatterns'
 import ListGroup from './pages/ListGroup'
 import SplitBill from './pages/SplitBill'
 import FinalTab from './pages/FinalTab'
+import ManualReceipt from './pages/ManualReceipt'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -84,6 +85,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/process" element={<ReceiptProcessing />} />
                 <Route path="/results" element={<ReceiptResults />} />
+                <Route path="/manual-receipt" element={<ManualReceipt />} />
                 <Route path="/list-group" element={<ListGroup />} />
                 <Route path="/split-bill" element={<SplitBill />} />
                 <Route path="/final-tab" element={<FinalTab />} />
@@ -110,6 +112,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/process" element={<ReceiptProcessing />} />
           <Route path="/results" element={<ReceiptResults />} />
+          <Route path="/manual-receipt" element={<ManualReceipt />} />
           <Route path="/list-group" element={<ListGroup />} />
           <Route path="/split-bill" element={<SplitBill />} />
           <Route path="/final-tab" element={<FinalTab />} />

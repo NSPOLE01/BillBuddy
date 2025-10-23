@@ -62,6 +62,14 @@ export default function Home() {
             </button>
           </>
         )}
+        {!uploadedFile && (
+          <button
+            className="manual-receipt-button"
+            onClick={() => navigate('/manual-receipt')}
+          >
+            Add Receipt Manually
+          </button>
+        )}
       </main>
     </>
   )
