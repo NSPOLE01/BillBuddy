@@ -91,15 +91,15 @@ export default function ListGroup() {
               </div>
             </div>
           )}
-
-          {people.length > 0 && (
-            <button className="continue-split-button" onClick={handleContinue}>
-              Continue to Split Bill
-            </button>
-          )}
         </div>
 
-        <button className="go-back-button" onClick={() => navigate(-1)}>
+        {people.length > 0 && (
+          <button className="continue-split-button" onClick={handleContinue}>
+            Continue to Split Bill
+          </button>
+        )}
+
+        <button className="go-back-button" onClick={() => navigate('/results', { state: { receipt } })}>
           Go Back
         </button>
       </div>
