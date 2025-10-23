@@ -11,6 +11,9 @@
 .list-group-content {
   max-width: 600px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .list-group-card {
@@ -145,14 +148,8 @@
   transform: scale(0.95);
 }
 
-.button-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-}
-
 .continue-split-button {
+  margin-top: 1rem;
   padding: 1rem 2rem;
   font-size: 1.1rem;
   font-weight: 600;
@@ -162,6 +159,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .continue-split-button:hover {
@@ -184,6 +182,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .go-back-button:hover {

@@ -12,8 +12,9 @@ export default function ListGroup() {
   const location = useLocation()
   const navigate = useNavigate()
   const receipt = location.state?.receipt as Receipt | undefined
+  const initialPeople = location.state?.people as Person[] | undefined
 
-  const [people, setPeople] = useState<Person[]>([])
+  const [people, setPeople] = useState<Person[]>(initialPeople || [])
   const [personName, setPersonName] = useState('')
 
   if (!receipt) {
@@ -91,17 +92,16 @@ export default function ListGroup() {
             </div>
           )}
 
-          <div className="button-group">
-            {people.length > 0 && (
-              <button className="continue-split-button" onClick={handleContinue}>
-                Continue to Split Bill
-              </button>
-            )}
-            <button className="go-back-button" onClick={() => navigate(-1)}>
-              Go Back
+          {people.length > 0 && (
+            <button className="continue-split-button" onClick={handleContinue}>
+              Continue to Split Bill
             </button>
-          </div>
+          )}
         </div>
+
+        <button className="go-back-button" onClick={() => navigate(-1)}>
+          Go Back
+        </button>
       </div>
     </main>
   )

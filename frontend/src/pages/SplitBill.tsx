@@ -320,7 +320,7 @@ export default function SplitBill() {
               View Final Tab
             </button>
           )}
-          <button className="go-back-button" onClick={() => navigate(-1)}>
+          <button className="go-back-button" onClick={() => navigate('/list-group', { state: { receipt, people } })}>
             Go Back
           </button>
         </div>
