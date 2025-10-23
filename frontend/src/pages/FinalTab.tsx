@@ -1,5 +1,8 @@
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { getCurrentUser } from 'aws-amplify/auth'
 import { Receipt } from '../types/receipt'
+import AuthModal from '../components/AuthModal'
 import './FinalTab.css'
 
 interface Person {
@@ -23,6 +26,22 @@ export default function FinalTab() {
   const location = useLocation()
   const navigate = useNavigate()
   const state = location.state as FinalTabState | undefined
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+
+  useEffect(() => {
+    checkAuthStatus()
+  }, [])
+
+  const checkAuthStatus = async () => {
+    try {
+      await getCurrentUser()
+      setIsAuthenticated(true)
+    } catch {
+      setIsAuthenticated(false)
+    }
+  }
 
   if (!state || !state.receipt || !state.people || !state.assignments) {
     navigate('/split-bill')
@@ -63,6 +82,20 @@ export default function FinalTab() {
     navigate('/split-bill', { state: { receipt, people, assignments } })
   }
 
+  const handleSpendingPatterns = () => {
+    if (isAuthenticated) {
+      navigate('/spending-patterns')
+    } else {
+      setShowAuthModal(true)
+    }
+  }
+
+  const handleCreateAccount = () => {
+    setShowAuthModal(false)
+    // Navigate to login page or trigger signup
+    navigate('/login')
+  }
+
   return (
     <main className="final-tab-container">
       <div className="final-tab-content">
@@ -90,10 +123,23 @@ export default function FinalTab() {
           </div>
 
         </div>
-        <button className="final-tab-back-button" onClick={handleGoBack}>
-          Go Back
-        </button>
+
+        <div className="final-tab-button-group">
+          <button className="spending-patterns-button" onClick={handleSpendingPatterns}>
+            See Spending Patterns
+          </button>
+          <button className="final-tab-back-button" onClick={handleGoBack}>
+            Go Back
+          </button>
+        </div>
       </div>
+
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          onCreateAccount={handleCreateAccount}
+        />
+      )}
     </main>
   )
 }
