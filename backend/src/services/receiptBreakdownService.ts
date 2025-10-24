@@ -53,6 +53,24 @@ export class ReceiptBreakdownService {
     return breakdown
   }
 
+  private parseAndNormalizeDate(dateString?: string): string {
+    if (!dateString) {
+      return new Date().toISOString().split('T')[0]
+    }
+
+    // Try to parse the date string
+    const parsedDate = new Date(dateString)
+
+    // Check if the date is valid
+    if (!isNaN(parsedDate.getTime())) {
+      // Return in YYYY-MM-DD format
+      return parsedDate.toISOString().split('T')[0]
+    }
+
+    // If parsing failed, return today's date
+    return new Date().toISOString().split('T')[0]
+  }
+
   async saveReceiptBreakdown(
     userId: string,
     request: SaveReceiptBreakdownRequest
@@ -68,6 +86,9 @@ export class ReceiptBreakdownService {
     const total = request.receipt.total && Number.isFinite(request.receipt.total)
       ? request.receipt.total
       : (subtotal + tax + (tip || 0))
+
+    // Normalize date to ISO format (YYYY-MM-DD)
+    const normalizedDate = this.parseAndNormalizeDate(request.receipt.date)
 
     const breakdown = this.calculateBreakdown({
       ...request,
@@ -87,7 +108,7 @@ export class ReceiptBreakdownService {
       id: `receipt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       userId,
       merchantName: request.receipt.merchantName,
-      date: request.receipt.date || new Date().toISOString().split('T')[0],
+      date: normalizedDate,
       subtotal,
       tax,
       tip,

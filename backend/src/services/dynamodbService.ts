@@ -53,7 +53,10 @@ export class DynamoDBService {
     })
 
     const response = await this.client.send(command)
-    return (response.Items as ReceiptBreakdown[]) || []
+    const items = (response.Items as ReceiptBreakdown[]) || []
+    console.log(`Found ${items.length} total receipts for user ${userId}`)
+    items.forEach(item => console.log(`  - Receipt ID: ${item.id}, Date: ${item.date}, Type: ${typeof item.date}`))
+    return items
   }
 
   async getUserReceiptBreakdownsByDateRange(
@@ -61,6 +64,8 @@ export class DynamoDBService {
     startDate: string,
     endDate: string
   ): Promise<ReceiptBreakdown[]> {
+    console.log(`Querying receipts for user ${userId} between ${startDate} and ${endDate}`)
+
     const command = new QueryCommand({
       TableName: this.tableName,
       KeyConditionExpression: 'userId = :userId',
@@ -77,6 +82,9 @@ export class DynamoDBService {
     })
 
     const response = await this.client.send(command)
-    return (response.Items as ReceiptBreakdown[]) || []
+    const items = (response.Items as ReceiptBreakdown[]) || []
+    console.log(`Found ${items.length} receipts in date range`)
+    items.forEach(item => console.log(`  - Receipt date: ${item.date}`))
+    return items
   }
 }

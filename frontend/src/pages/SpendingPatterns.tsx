@@ -38,10 +38,15 @@ export default function SpendingPatterns() {
           startDate.setFullYear(startDate.getFullYear() - 1)
         }
 
+        const startDateStr = startDate.toISOString().split('T')[0]
+        const endDateStr = endDate.toISOString().split('T')[0]
+
+        console.log(`Fetching receipts from ${startDateStr} to ${endDateStr}`)
+
         fetchedReceipts = await receiptBreakdownApi.getUserReceiptBreakdownsByDateRange(
           user.userId,
-          startDate.toISOString().split('T')[0],
-          endDate.toISOString().split('T')[0]
+          startDateStr,
+          endDateStr
         )
       }
 
