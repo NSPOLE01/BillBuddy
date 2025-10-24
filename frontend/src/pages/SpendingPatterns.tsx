@@ -10,6 +10,7 @@ export default function SpendingPatterns() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedPeriod, setSelectedPeriod] = useState<'all' | '30days' | '90days' | 'year'>('all')
+  const [selectedReceipt, setSelectedReceipt] = useState<ReceiptBreakdown | null>(null)
 
   useEffect(() => {
     loadReceipts()
@@ -147,27 +148,22 @@ export default function SpendingPatterns() {
               {receipts.length === 0 ? (
                 <p className="empty-message">No receipts found for this period.</p>
               ) : (
-                <div className="receipts-list">
+                <div className="receipts-grid">
                   {receipts.map(receipt => (
-                    <div key={receipt.id} className="receipt-card">
-                      <div className="receipt-header">
-                        <h3 className="receipt-merchant">{receipt.merchantName}</h3>
-                        <p className="receipt-date">{new Date(receipt.date).toLocaleDateString()}</p>
-                      </div>
-                      <div className="receipt-details">
-                        <div className="receipt-total">
-                          <span>Total:</span>
-                          <span>${(receipt.total ?? 0).toFixed(2)}</span>
-                        </div>
-                        <div className="receipt-breakdown">
-                          {receipt.peopleBreakdown?.map(person => (
-                            <div key={person.personId} className="breakdown-row">
-                              <span>{person.personName}</span>
-                              <span>${(person.amountOwed ?? 0).toFixed(2)}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                    <div
+                      key={receipt.id}
+                      className="receipt-compact-card"
+                      onClick={() => setSelectedReceipt(receipt)}
+                    >
+                      <h3 className="receipt-compact-merchant">{receipt.merchantName}</h3>
+                      <p className="receipt-compact-date">
+                        {new Date(receipt.date + 'T00:00:00').toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </p>
+                      <p className="receipt-compact-total">${(receipt.total ?? 0).toFixed(2)}</p>
                     </div>
                   ))}
                 </div>
@@ -180,6 +176,62 @@ export default function SpendingPatterns() {
           </>
         )}
       </div>
+
+      {selectedReceipt && (
+        <div className="modal-overlay" onClick={() => setSelectedReceipt(null)}>
+          <div className="modal-content receipt-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-x" onClick={() => setSelectedReceipt(null)}>
+              ✕
+            </button>
+            <h2 className="modal-receipt-merchant">{selectedReceipt.merchantName}</h2>
+            <p className="modal-receipt-date">
+              {new Date(selectedReceipt.date + 'T00:00:00').toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </p>
+
+            <div className="modal-receipt-details">
+              <div className="modal-section">
+                <h3 className="modal-section-title">Summary</h3>
+                <div className="modal-summary-grid">
+                  <div className="modal-summary-row">
+                    <span>Subtotal:</span>
+                    <span>${(selectedReceipt.subtotal ?? 0).toFixed(2)}</span>
+                  </div>
+                  <div className="modal-summary-row">
+                    <span>Tax:</span>
+                    <span>${(selectedReceipt.tax ?? 0).toFixed(2)}</span>
+                  </div>
+                  {selectedReceipt.tip !== undefined && (
+                    <div className="modal-summary-row">
+                      <span>Tip:</span>
+                      <span>${(selectedReceipt.tip ?? 0).toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="modal-summary-row modal-summary-total">
+                    <span>Total:</span>
+                    <span>${(selectedReceipt.total ?? 0).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <h3 className="modal-section-title">Breakdown</h3>
+                <div className="modal-breakdown-list">
+                  {selectedReceipt.peopleBreakdown?.map(person => (
+                    <div key={person.personId} className="modal-breakdown-row">
+                      <span className="modal-person-name">{person.personName}</span>
+                      <span className="modal-person-amount">${(person.amountOwed ?? 0).toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
