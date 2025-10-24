@@ -7,6 +7,7 @@ export default function ReceiptResults() {
   const location = useLocation()
   const navigate = useNavigate()
   const initialReceipt = location.state?.receipt as Receipt | undefined
+  const isManualEntry = location.state?.isManualEntry as boolean | undefined
 
   const [merchantName, setMerchantName] = useState('')
   const [items, setItems] = useState<ReceiptItem[]>([])
@@ -439,10 +440,42 @@ export default function ReceiptResults() {
                   <button className="tip-percentage-button" onClick={() => handleTipPercentage(25)}>
                     25%
                   </button>
-                  <button className="tip-percentage-button" onClick={() => { handleAddTip(); handleTipEditStart(); }}>
-                    Custom
-                  </button>
                 </div>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  className="tip-custom-input"
+                  placeholder="0.00"
+                  value={editingTipValue}
+                  onChange={(e) => handleTipChange(e.target.value)}
+                  onFocus={() => {
+                    if (tip === undefined) {
+                      setTip(0)
+                      setEditingTip(true)
+                      setEditingTipValue('0')
+                    } else {
+                      setEditingTip(true)
+                      setEditingTipValue(tip.toString())
+                    }
+                  }}
+                  onBlur={() => {
+                    if (tip === 0 || editingTipValue === '' || editingTipValue === '0') {
+                      setTip(undefined)
+                    }
+                    setEditingTip(false)
+                    setEditingTipValue('')
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      if (tip === 0 || editingTipValue === '' || editingTipValue === '0') {
+                        setTip(undefined)
+                      }
+                      setEditingTip(false)
+                      setEditingTipValue('')
+                      e.currentTarget.blur()
+                    }
+                  }}
+                />
               </div>
             )}
             <div className="total-row final-total">
@@ -469,7 +502,24 @@ export default function ReceiptResults() {
           >
             Create My Group
           </button>
-          <button className="go-back-button" onClick={() => navigate(-1)}>
+          <button
+            className="go-back-button"
+            onClick={() => {
+              if (isManualEntry) {
+                navigate('/manual-receipt', {
+                  state: {
+                    merchantName,
+                    date: initialReceipt.date,
+                    items,
+                    tax: tax.toString(),
+                    tip: tip !== undefined ? tip.toString() : ''
+                  }
+                })
+              } else {
+                navigate(-1)
+              }
+            }}
+          >
             Go Back
           </button>
         </div>

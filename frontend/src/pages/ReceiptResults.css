@@ -363,7 +363,7 @@
 
 .tip-percentage-buttons {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
 }
 
@@ -386,6 +386,29 @@
 
 .tip-percentage-button:active {
   transform: scale(0.95);
+}
+
+.tip-custom-input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.tip-custom-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.tip-custom-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
 }
 
 .tip-input-group {

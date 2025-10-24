@@ -1,16 +1,26 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Receipt, ReceiptItem } from '../types/receipt'
 import './ManualReceipt.css'
 
+interface ManualReceiptState {
+  merchantName?: string
+  date?: string
+  items?: ReceiptItem[]
+  tax?: string
+  tip?: string
+}
+
 export default function ManualReceipt() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const state = location.state as ManualReceiptState | undefined
 
-  const [merchantName, setMerchantName] = useState('')
-  const [date, setDate] = useState('')
-  const [items, setItems] = useState<ReceiptItem[]>([])
-  const [tax, setTax] = useState('')
-  const [tip, setTip] = useState('')
+  const [merchantName, setMerchantName] = useState(state?.merchantName || '')
+  const [date, setDate] = useState(state?.date || '')
+  const [items, setItems] = useState<ReceiptItem[]>(state?.items || [])
+  const [tax, setTax] = useState(state?.tax || '')
+  const [tip, setTip] = useState(state?.tip || '')
 
   // Form for adding new item
   const [itemName, setItemName] = useState('')
@@ -64,7 +74,7 @@ export default function ManualReceipt() {
       date: date || undefined
     }
 
-    navigate('/results', { state: { receipt } })
+    navigate('/results', { state: { receipt, isManualEntry: true } })
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.price, 0)
