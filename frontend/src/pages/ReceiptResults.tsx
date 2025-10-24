@@ -302,6 +302,7 @@ export default function ReceiptResults() {
                         className="item-name-input"
                         value={item.name}
                         onChange={(e) => handleItemNameChange(item.id, e.target.value)}
+                        onBlur={handleItemPriceEditEnd}
                         onKeyDown={(e) => e.key === 'Enter' && handleItemPriceEditEnd()}
                         autoFocus
                       />
@@ -310,6 +311,7 @@ export default function ReceiptResults() {
                         className="item-quantity-input"
                         value={item.quantity || 1}
                         onChange={(e) => handleItemQuantityChange(item.id, e.target.value)}
+                        onBlur={handleItemPriceEditEnd}
                         onKeyDown={(e) => e.key === 'Enter' && handleItemPriceEditEnd()}
                         min="1"
                       />
@@ -319,6 +321,7 @@ export default function ReceiptResults() {
                         className="item-price-input"
                         value={editingPriceValue}
                         onChange={(e) => handleItemPriceChange(item.id, e.target.value)}
+                        onBlur={handleItemPriceEditEnd}
                         onKeyDown={(e) => e.key === 'Enter' && handleItemPriceEditEnd()}
                       />
                     </>
