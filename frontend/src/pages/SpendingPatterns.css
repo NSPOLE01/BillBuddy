@@ -281,7 +281,7 @@
   left: 1rem;
   background: none;
   border: none;
-  color: #ef4444;
+  color: #3b82f6;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.25rem;
@@ -291,6 +291,26 @@
 }
 
 .modal-close-x:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.modal-delete-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+  z-index: 10;
+  color: #3b82f6;
+}
+
+.modal-delete-button:hover {
   transform: scale(1.15);
   opacity: 0.8;
 }

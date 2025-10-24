@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { useNavigate } from 'react-router-dom'
+import { FaTrash } from 'react-icons/fa'
 import { receiptBreakdownApi, ReceiptBreakdown } from '../services/receiptBreakdownApi'
 import './SpendingPatterns.css'
 
@@ -182,6 +183,29 @@ export default function SpendingPatterns() {
           <div className="modal-content receipt-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-x" onClick={() => setSelectedReceipt(null)}>
               ✕
+            </button>
+            <button
+              className="modal-delete-button"
+              onClick={async () => {
+                if (window.confirm('Are you sure you want to delete this receipt? This action cannot be undone.')) {
+                  try {
+                    const user = await getCurrentUser()
+                    await receiptBreakdownApi.deleteReceiptBreakdown(user.userId, selectedReceipt.id)
+
+                    // Remove the receipt from the local state
+                    setReceipts(receipts.filter(r => r.id !== selectedReceipt.id))
+                    setSelectedReceipt(null)
+
+                    console.log('Receipt deleted successfully')
+                  } catch (error) {
+                    console.error('Error deleting receipt:', error)
+                    alert('Failed to delete receipt. Please try again.')
+                  }
+                }
+              }}
+              aria-label="Delete receipt"
+            >
+              <FaTrash size={18} />
             </button>
             <h2 className="modal-receipt-merchant">{selectedReceipt.merchantName}</h2>
             <p className="modal-receipt-date">

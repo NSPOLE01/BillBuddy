@@ -122,6 +122,25 @@ app.get('/api/receipt-breakdowns/:userId', async (req, res) => {
   }
 })
 
+// Delete receipt breakdown endpoint
+app.delete('/api/receipt-breakdown/:userId/:receiptId', async (req, res) => {
+  try {
+    const { userId, receiptId } = req.params
+
+    console.log(`Deleting receipt breakdown ${receiptId} for user ${userId}`)
+
+    await receiptBreakdownService.deleteReceiptBreakdown(userId, receiptId)
+
+    res.json({ success: true, message: 'Receipt deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting receipt breakdown:', error)
+    res.status(500).json({
+      error: 'Failed to delete receipt breakdown',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
+  }
+})
+
 app.listen(port, () => {
   console.log(`BillBuddy backend server running on port ${port}`)
   console.log(`Health check: http://localhost:${port}/health`)

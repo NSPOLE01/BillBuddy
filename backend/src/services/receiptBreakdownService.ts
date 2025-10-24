@@ -139,4 +139,8 @@ export class ReceiptBreakdownService {
   ): Promise<ReceiptBreakdown[]> {
     return await this.dynamoDBService.getUserReceiptBreakdownsByDateRange(userId, startDate, endDate)
   }
+
+  async deleteReceiptBreakdown(userId: string, receiptId: string): Promise<void> {
+    return await this.dynamoDBService.deleteReceiptBreakdown(userId, receiptId)
+  }
 }

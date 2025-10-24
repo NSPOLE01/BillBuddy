@@ -4,6 +4,7 @@ import {
   PutCommand,
   QueryCommand,
   GetCommand,
+  DeleteCommand,
 } from '@aws-sdk/lib-dynamodb'
 import { ReceiptBreakdown } from '../types/receiptBreakdown'
 
@@ -86,5 +87,18 @@ export class DynamoDBService {
     console.log(`Found ${items.length} receipts in date range`)
     items.forEach(item => console.log(`  - Receipt date: ${item.date}`))
     return items
+  }
+
+  async deleteReceiptBreakdown(userId: string, receiptId: string): Promise<void> {
+    const command = new DeleteCommand({
+      TableName: this.tableName,
+      Key: {
+        userId,
+        id: receiptId,
+      },
+    })
+
+    await this.client.send(command)
+    console.log(`Deleted receipt ${receiptId} for user ${userId}`)
   }
 }

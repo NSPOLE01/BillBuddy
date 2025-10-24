@@ -108,4 +108,15 @@ export const receiptBreakdownApi = {
     const data = await response.json()
     return data.breakdowns
   },
+
+  async deleteReceiptBreakdown(userId: string, receiptId: string): Promise<void> {
+    const response = await fetch(`${API_URL}/api/receipt-breakdown/${userId}/${receiptId}`, {
+      method: 'DELETE',
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Failed to delete receipt breakdown')
+    }
+  },
 }
