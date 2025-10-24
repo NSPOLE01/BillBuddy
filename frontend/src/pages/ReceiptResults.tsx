@@ -13,8 +13,10 @@ export default function ReceiptResults() {
   const [items, setItems] = useState<ReceiptItem[]>([])
   const [tax, setTax] = useState(0)
   const [tip, setTip] = useState<number | undefined>(undefined)
+  const [receiptDate, setReceiptDate] = useState('')
   const [editingItemId, setEditingItemId] = useState<string | null>(null)
   const [editingMerchant, setEditingMerchant] = useState(false)
+  const [editingDate, setEditingDate] = useState(false)
   const [editingTax, setEditingTax] = useState(false)
   const [editingTip, setEditingTip] = useState(false)
   const [manualSubtotal, setManualSubtotal] = useState<number | null>(null)
@@ -37,6 +39,18 @@ export default function ReceiptResults() {
     setItems(initialReceipt.items)
     setTax(initialReceipt.tax)
     setTip(initialReceipt.tip)
+
+    // Convert date to YYYY-MM-DD format for date input
+    if (initialReceipt.date) {
+      const parsedDate = new Date(initialReceipt.date)
+      if (!isNaN(parsedDate.getTime())) {
+        setReceiptDate(parsedDate.toISOString().split('T')[0])
+      } else {
+        setReceiptDate(new Date().toISOString().split('T')[0])
+      }
+    } else {
+      setReceiptDate(new Date().toISOString().split('T')[0])
+    }
   }, [initialReceipt, navigate])
 
   if (!initialReceipt) {
@@ -249,7 +263,25 @@ export default function ReceiptResults() {
               {merchantName}
             </h2>
           )}
-          {initialReceipt.date && <p className="receipt-date">{initialReceipt.date}</p>}
+          {editingDate ? (
+            <input
+              type="date"
+              className="receipt-date-input"
+              value={receiptDate}
+              onChange={(e) => setReceiptDate(e.target.value)}
+              onBlur={() => setEditingDate(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingDate(false)}
+              autoFocus
+            />
+          ) : (
+            <p className="receipt-date" onClick={() => setEditingDate(true)}>
+              {receiptDate ? new Date(receiptDate + 'T00:00:00').toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              }) : 'No date'}
+            </p>
+          )}
 
           <div className="items-section">
             <h3 className="section-title">Items</h3>
@@ -495,7 +527,7 @@ export default function ReceiptResults() {
                   items,
                   tax,
                   tip,
-                  date: initialReceipt.date
+                  date: receiptDate
                 }
               }
             })}
@@ -509,7 +541,7 @@ export default function ReceiptResults() {
                 navigate('/manual-receipt', {
                   state: {
                     merchantName,
-                    date: initialReceipt.date,
+                    date: receiptDate,
                     items,
                     tax: tax.toString(),
                     tip: tip !== undefined ? tip.toString() : ''

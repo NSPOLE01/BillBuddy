@@ -56,6 +56,25 @@
   color: var(--text-secondary);
   margin: 0 0 2rem 0;
   text-align: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.receipt-date:hover {
+  opacity: 0.7;
+}
+
+.receipt-date-input {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.5rem;
+  text-align: center;
+  margin: 0 auto 2rem auto;
+  display: block;
+  max-width: 200px;
 }
 
 .items-section {
