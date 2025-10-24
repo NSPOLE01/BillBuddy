@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { getCurrentUser } from 'aws-amplify/auth'
 import { Receipt } from '../types/receipt'
+import { receiptBreakdownApi } from '../services/receiptBreakdownApi'
 import './SplitBill.css'
 
 interface Person {
@@ -36,6 +38,7 @@ export default function SplitBill() {
   const [selectedPersonId, setSelectedPersonId] = useState<string>('')
   const [assignToEveryone, setAssignToEveryone] = useState(false)
   const [showWarningBanner, setShowWarningBanner] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (!receipt || people.length === 0) {
@@ -198,12 +201,35 @@ export default function SplitBill() {
     assignments.some(a => a.itemId === item.id)
   )
 
-  const handleViewFinalTab = () => {
+  const handleViewFinalTab = async () => {
     if (!allItemsAssigned) {
       setShowWarningBanner(true)
       setTimeout(() => setShowWarningBanner(false), 3000)
       return
     }
+
+    // Try to save receipt breakdown if user is authenticated
+    try {
+      setIsSaving(true)
+      const user = await getCurrentUser()
+
+      // Save receipt breakdown to DynamoDB
+      await receiptBreakdownApi.saveReceiptBreakdown(
+        user.userId,
+        receipt,
+        people,
+        assignments,
+        receipt.items
+      )
+
+      console.log('Receipt breakdown saved successfully')
+    } catch (error) {
+      // If user is not authenticated or save fails, just log it and continue
+      console.log('Could not save receipt breakdown:', error)
+    } finally {
+      setIsSaving(false)
+    }
+
     navigate('/final-tab', { state: { receipt, people, assignments } })
   }
 
@@ -316,8 +342,9 @@ export default function SplitBill() {
             <button
               className={`view-final-tab-button ${!allItemsAssigned ? 'disabled' : ''}`}
               onClick={handleViewFinalTab}
+              disabled={isSaving}
             >
-              View Final Tab
+              {isSaving ? 'Saving...' : 'View Final Tab'}
             </button>
           )}
           <button className="go-back-button" onClick={() => navigate('/list-group', { state: { receipt, people } })}>

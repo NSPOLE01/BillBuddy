@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { Receipt } from '../types/receipt'
 import AuthModal from '../components/AuthModal'
-import { receiptBreakdownApi } from '../services/receiptBreakdownApi'
 import './FinalTab.css'
 
 interface Person {
@@ -30,48 +29,17 @@ export default function FinalTab() {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [saveError, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    checkAuthStatusAndSave()
+    checkAuthStatus()
   }, [])
 
-  const checkAuthStatusAndSave = async () => {
+  const checkAuthStatus = async () => {
     try {
-      const user = await getCurrentUser()
+      await getCurrentUser()
       setIsAuthenticated(true)
-
-      // Save receipt breakdown if user is authenticated
-      if (state && state.receipt && state.people && state.assignments) {
-        await saveReceiptBreakdown(user.userId)
-      }
     } catch {
       setIsAuthenticated(false)
-    }
-  }
-
-  const saveReceiptBreakdown = async (userId: string) => {
-    if (isSaving) return
-
-    try {
-      setIsSaving(true)
-      setError(null)
-
-      await receiptBreakdownApi.saveReceiptBreakdown(
-        userId,
-        receipt,
-        people,
-        assignments,
-        receipt.items
-      )
-
-      console.log('Receipt breakdown saved successfully')
-    } catch (error) {
-      console.error('Error saving receipt breakdown:', error)
-      setError(error instanceof Error ? error.message : 'Failed to save receipt breakdown')
-    } finally {
-      setIsSaving(false)
     }
   }
 

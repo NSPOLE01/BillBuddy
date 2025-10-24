@@ -12,7 +12,7 @@ export interface ReceiptBreakdown {
   subtotal: number
   tax: number
   tip?: number
-  total: number
+  total?: number
   userPaid: number
   peopleBreakdown: PersonBreakdown[]
   createdAt: string
@@ -25,7 +25,7 @@ export interface SaveReceiptBreakdownRequest {
     subtotal: number
     tax: number
     tip?: number
-    total: number
+    total?: number
   }
   people: Array<{
     id: string

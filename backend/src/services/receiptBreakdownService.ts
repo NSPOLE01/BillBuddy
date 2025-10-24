@@ -57,7 +57,28 @@ export class ReceiptBreakdownService {
     userId: string,
     request: SaveReceiptBreakdownRequest
   ): Promise<ReceiptBreakdown> {
-    const breakdown = this.calculateBreakdown(request)
+    // Validate numeric fields
+    const subtotal = Number.isFinite(request.receipt.subtotal) ? request.receipt.subtotal : 0
+    const tax = Number.isFinite(request.receipt.tax) ? request.receipt.tax : 0
+    const tip = request.receipt.tip !== undefined && Number.isFinite(request.receipt.tip)
+      ? request.receipt.tip
+      : undefined
+
+    // Calculate total if not provided
+    const total = request.receipt.total && Number.isFinite(request.receipt.total)
+      ? request.receipt.total
+      : (subtotal + tax + (tip || 0))
+
+    const breakdown = this.calculateBreakdown({
+      ...request,
+      receipt: {
+        ...request.receipt,
+        subtotal,
+        tax,
+        tip,
+        total,
+      },
+    })
 
     // Calculate how much the user paid (total of all amounts owed to them)
     const userPaid = breakdown.reduce((sum, person) => sum + person.amountOwed, 0)
@@ -67,14 +88,19 @@ export class ReceiptBreakdownService {
       userId,
       merchantName: request.receipt.merchantName,
       date: request.receipt.date || new Date().toISOString().split('T')[0],
-      subtotal: request.receipt.subtotal,
-      tax: request.receipt.tax,
-      tip: request.receipt.tip,
-      total: request.receipt.total,
-      userPaid,
-      peopleBreakdown: breakdown,
+      subtotal,
+      tax,
+      tip,
+      total,
+      userPaid: Number.isFinite(userPaid) ? userPaid : 0,
+      peopleBreakdown: breakdown.map(person => ({
+        ...person,
+        amountOwed: Number.isFinite(person.amountOwed) ? person.amountOwed : 0,
+      })),
       createdAt: new Date().toISOString(),
     }
+
+    console.log('Saving receipt breakdown to DynamoDB:', JSON.stringify(receiptBreakdown, null, 2))
 
     await this.dynamoDBService.saveReceiptBreakdown(receiptBreakdown)
 

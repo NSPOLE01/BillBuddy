@@ -25,7 +25,7 @@ export interface ReceiptBreakdown {
   subtotal: number
   tax: number
   tip?: number
-  total: number
+  total?: number
   userPaid: number
   peopleBreakdown: PersonBreakdown[]
   createdAt: string
@@ -41,25 +41,33 @@ export const receiptBreakdownApi = {
     assignments: ItemAssignment[],
     items: ReceiptItem[]
   ): Promise<ReceiptBreakdown> {
+    // Validate numeric fields to prevent NaN
+    const payload = {
+      userId,
+      receipt: {
+        merchantName: receipt.merchantName,
+        date: receipt.date,
+        subtotal: Number.isFinite(receipt.subtotal) ? receipt.subtotal : 0,
+        tax: Number.isFinite(receipt.tax) ? receipt.tax : 0,
+        tip: receipt.tip !== undefined && Number.isFinite(receipt.tip) ? receipt.tip : undefined,
+        total: Number.isFinite(receipt.total) ? receipt.total : 0,
+      },
+      people,
+      assignments,
+      items: items.map(item => ({
+        ...item,
+        price: Number.isFinite(item.price) ? item.price : 0,
+      })),
+    }
+
+    console.log('Saving receipt breakdown:', payload)
+
     const response = await fetch(`${API_URL}/api/receipt-breakdown`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        userId,
-        receipt: {
-          merchantName: receipt.merchantName,
-          date: receipt.date,
-          subtotal: receipt.subtotal,
-          tax: receipt.tax,
-          tip: receipt.tip,
-          total: receipt.total,
-        },
-        people,
-        assignments,
-        items,
-      }),
+      body: JSON.stringify(payload),
     })
 
     if (!response.ok) {

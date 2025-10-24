@@ -152,13 +152,13 @@ export default function SpendingPatterns() {
                       <div className="receipt-details">
                         <div className="receipt-total">
                           <span>Total:</span>
-                          <span>${receipt.total.toFixed(2)}</span>
+                          <span>${(receipt.total ?? 0).toFixed(2)}</span>
                         </div>
                         <div className="receipt-breakdown">
-                          {receipt.peopleBreakdown.map(person => (
+                          {receipt.peopleBreakdown?.map(person => (
                             <div key={person.personId} className="breakdown-row">
                               <span>{person.personName}</span>
-                              <span>${person.amountOwed.toFixed(2)}</span>
+                              <span>${(person.amountOwed ?? 0).toFixed(2)}</span>
                             </div>
                           ))}
                         </div>
