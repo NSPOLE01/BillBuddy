@@ -192,7 +192,6 @@ export default function SpendingPatterns() {
                     const user = await getCurrentUser()
                     await receiptBreakdownApi.deleteReceiptBreakdown(user.userId, selectedReceipt.id)
 
-                    // Remove the receipt from the local state
                     setReceipts(receipts.filter(r => r.id !== selectedReceipt.id))
                     setSelectedReceipt(null)
 
