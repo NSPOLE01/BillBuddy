@@ -12,9 +12,16 @@ export default function SpendingPatterns() {
   const [error, setError] = useState<string | null>(null)
   const [selectedPeriod, setSelectedPeriod] = useState<'all' | '30days' | '90days' | 'year'>('all')
   const [selectedReceipt, setSelectedReceipt] = useState<ReceiptBreakdown | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const receiptsPerPage = 12
 
   useEffect(() => {
     loadReceipts()
+  }, [selectedPeriod])
+
+  useEffect(() => {
+    // Reset to page 1 when period changes
+    setCurrentPage(1)
   }, [selectedPeriod])
 
   const loadReceipts = async () => {
@@ -75,6 +82,17 @@ export default function SpendingPatterns() {
   const topDebtors = Array.from(owedByPerson.entries())
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
+
+  // Pagination calculations
+  const indexOfLastReceipt = currentPage * receiptsPerPage
+  const indexOfFirstReceipt = indexOfLastReceipt - receiptsPerPage
+  const currentReceipts = receipts.slice(indexOfFirstReceipt, indexOfLastReceipt)
+  const totalPages = Math.ceil(receipts.length / receiptsPerPage)
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <main className="spending-patterns-container">
@@ -149,25 +167,57 @@ export default function SpendingPatterns() {
               {receipts.length === 0 ? (
                 <p className="empty-message">No receipts found for this period.</p>
               ) : (
-                <div className="receipts-grid">
-                  {receipts.map(receipt => (
-                    <div
-                      key={receipt.id}
-                      className="receipt-compact-card"
-                      onClick={() => setSelectedReceipt(receipt)}
-                    >
-                      <h3 className="receipt-compact-merchant">{receipt.merchantName}</h3>
-                      <p className="receipt-compact-date">
-                        {new Date(receipt.date + 'T00:00:00').toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </p>
-                      <p className="receipt-compact-total">${(receipt.total ?? 0).toFixed(2)}</p>
+                <>
+                  <div className="receipts-grid">
+                    {currentReceipts.map(receipt => (
+                      <div
+                        key={receipt.id}
+                        className="receipt-compact-card"
+                        onClick={() => setSelectedReceipt(receipt)}
+                      >
+                        <h3 className="receipt-compact-merchant">{receipt.merchantName}</h3>
+                        <p className="receipt-compact-date">
+                          {new Date(receipt.date + 'T00:00:00').toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </p>
+                        <p className="receipt-compact-total">${(receipt.total ?? 0).toFixed(2)}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {totalPages > 1 && (
+                    <div className="pagination">
+                      <button
+                        className="pagination-button"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                      >
+                        Previous
+                      </button>
+                      <div className="pagination-numbers">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => (
+                          <button
+                            key={pageNumber}
+                            className={`pagination-number ${currentPage === pageNumber ? 'active' : ''}`}
+                            onClick={() => handlePageChange(pageNumber)}
+                          >
+                            {pageNumber}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        className="pagination-button"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                      </button>
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </div>
 
