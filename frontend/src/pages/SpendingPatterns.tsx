@@ -241,7 +241,7 @@ export default function SpendingPatterns() {
                           cx="50%"
                           cy="50%"
                           labelLine={false}
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          label={false}
                           outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
@@ -260,7 +260,20 @@ export default function SpendingPatterns() {
                           itemStyle={{
                             color: 'var(--text-primary)'
                           }}
-                          formatter={(value: number) => `$${value.toFixed(2)}`}
+                          formatter={(value: number, name: string, props: any) => {
+                            const total = pieChartData.reduce((sum, item) => sum + item.value, 0)
+                            const percent = ((value / total) * 100).toFixed(1)
+                            return [`$${value.toFixed(2)} (${percent}%)`, props.payload.name]
+                          }}
+                        />
+                        <Legend
+                          verticalAlign="bottom"
+                          height={36}
+                          iconType="circle"
+                          wrapperStyle={{
+                            color: 'var(--text-primary)',
+                            fontSize: '0.9rem'
+                          }}
                         />
                       </PieChart>
                     </ResponsiveContainer>
