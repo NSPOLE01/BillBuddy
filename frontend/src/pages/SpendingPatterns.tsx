@@ -211,7 +211,11 @@ export default function SpendingPatterns() {
                         contentStyle={{
                           backgroundColor: 'var(--bg-secondary)',
                           border: '1px solid var(--border-color)',
-                          borderRadius: '8px'
+                          borderRadius: '8px',
+                          color: 'var(--text-primary)'
+                        }}
+                        itemStyle={{
+                          color: 'var(--text-primary)'
                         }}
                         formatter={(value: number) => `$${value.toFixed(2)}`}
                       />
@@ -250,7 +254,11 @@ export default function SpendingPatterns() {
                           contentStyle={{
                             backgroundColor: 'var(--bg-secondary)',
                             border: '1px solid var(--border-color)',
-                            borderRadius: '8px'
+                            borderRadius: '8px',
+                            color: 'var(--text-primary)'
+                          }}
+                          itemStyle={{
+                            color: 'var(--text-primary)'
                           }}
                           formatter={(value: number) => `$${value.toFixed(2)}`}
                         />
