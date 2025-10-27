@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { useNavigate } from 'react-router-dom'
 import { FaTrash } from 'react-icons/fa'
+import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { receiptBreakdownApi, ReceiptBreakdown } from '../services/receiptBreakdownApi'
 import './SpendingPatterns.css'
 
@@ -93,6 +94,31 @@ export default function SpendingPatterns() {
     setCurrentPage(pageNumber)
   }
 
+  // Prepare line chart data - group receipts by date and sum totals
+  const spendingByDate = receipts.reduce((acc, receipt) => {
+    const date = receipt.date
+    if (!acc[date]) {
+      acc[date] = 0
+    }
+    acc[date] += receipt.userPaid
+    return acc
+  }, {} as Record<string, number>)
+
+  const lineChartData = Object.entries(spendingByDate)
+    .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+    .map(([date, amount]) => ({
+      date: new Date(date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      amount: Number(amount.toFixed(2))
+    }))
+
+  // Prepare pie chart data - top debtors
+  const pieChartData = topDebtors.map(([name, amount]) => ({
+    name,
+    value: Number(amount.toFixed(2))
+  }))
+
+  const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981']
+
   return (
     <main className="spending-patterns-container">
       <div className="spending-patterns-content">
@@ -146,6 +172,76 @@ export default function SpendingPatterns() {
                 </div>
               )}
             </div>
+
+            {receipts.length > 0 && (
+              <div className="charts-section">
+                <div className="chart-container">
+                  <h3 className="chart-title">Spending Over Time</h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={lineChartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                      <XAxis
+                        dataKey="date"
+                        stroke="var(--text-secondary)"
+                        style={{ fontSize: '0.85rem' }}
+                      />
+                      <YAxis
+                        stroke="var(--text-secondary)"
+                        style={{ fontSize: '0.85rem' }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'var(--bg-secondary)',
+                          border: '1px solid var(--border-color)',
+                          borderRadius: '8px'
+                        }}
+                        formatter={(value: number) => `$${value.toFixed(2)}`}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="amount"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        dot={{ fill: '#3b82f6', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {pieChartData.length > 0 && (
+                  <div className="chart-container">
+                    <h3 className="chart-title">Debtors Share</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={pieChartData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                        >
+                          {pieChartData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px'
+                          }}
+                          formatter={(value: number) => `$${value.toFixed(2)}`}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </div>
+            )}
 
             {topDebtors.length > 0 && (
               <div className="debtors-section">

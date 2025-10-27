@@ -101,6 +101,28 @@
   margin: 0;
 }
 
+.charts-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.chart-container {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.chart-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
 .debtors-section,
 .receipts-section {
   background-color: var(--bg-secondary);
@@ -226,6 +248,14 @@
 
   .spending-patterns-title {
     font-size: 1.75rem;
+  }
+
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
   }
 }
 
