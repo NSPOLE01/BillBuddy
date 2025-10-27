@@ -91,7 +91,6 @@ export default function SpendingPatterns() {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
