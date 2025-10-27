@@ -94,21 +94,39 @@ export default function SpendingPatterns() {
     setCurrentPage(pageNumber)
   }
 
-  // Prepare line chart data - group receipts by date and sum totals
-  const spendingByDate = receipts.reduce((acc, receipt) => {
-    const date = receipt.date
-    if (!acc[date]) {
-      acc[date] = 0
-    }
-    acc[date] += receipt.userPaid
-    return acc
-  }, {} as Record<string, number>)
+  // Prepare line chart data - group receipts by appropriate time period
+  const getTimeKey = (dateString: string, period: string) => {
+    const date = new Date(dateString + 'T00:00:00')
 
-  const lineChartData = Object.entries(spendingByDate)
-    .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
-    .map(([date, amount]) => ({
-      date: new Date(date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      amount: Number(amount.toFixed(2))
+    if (period === '30days') {
+      // Group by day
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    } else if (period === '90days') {
+      // Group by week - get the Monday of that week
+      const day = date.getDay()
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1) // Adjust to Monday
+      const monday = new Date(date.setDate(diff))
+      return `Week of ${monday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+    } else {
+      // Group by month for 'all' and 'year'
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    }
+  }
+
+  const spendingByPeriod = receipts.reduce((acc, receipt) => {
+    const key = getTimeKey(receipt.date, selectedPeriod)
+    if (!acc[key]) {
+      acc[key] = { amount: 0, timestamp: new Date(receipt.date + 'T00:00:00').getTime() }
+    }
+    acc[key].amount += receipt.userPaid
+    return acc
+  }, {} as Record<string, { amount: number; timestamp: number }>)
+
+  const lineChartData = Object.entries(spendingByPeriod)
+    .sort((a, b) => a[1].timestamp - b[1].timestamp)
+    .map(([period, data]) => ({
+      date: period,
+      amount: Number(data.amount.toFixed(2))
     }))
 
   // Prepare pie chart data - top debtors
