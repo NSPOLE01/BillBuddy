@@ -96,6 +96,7 @@ export default function ReceiptResults() {
     setEditingPriceValue('')
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleAddTip = () => {
     setTip(0)
     setEditingTip(false)
@@ -161,6 +162,7 @@ export default function ReceiptResults() {
     setManualSubtotal(null)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleRemoveTax = () => {
     setTax(0)
     setEditingTax(false)

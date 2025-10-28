@@ -246,7 +246,7 @@ export default function SpendingPatterns() {
                           fill="#8884d8"
                           dataKey="value"
                         >
-                          {pieChartData.map((entry, index) => (
+                          {pieChartData.map((_entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
@@ -260,7 +260,7 @@ export default function SpendingPatterns() {
                           itemStyle={{
                             color: 'var(--text-primary)'
                           }}
-                          formatter={(value: number, name: string, props: any) => {
+                          formatter={(value: number, _name: string, props: any) => {
                             const total = pieChartData.reduce((sum, item) => sum + item.value, 0)
                             const percent = ((value / total) * 100).toFixed(1)
                             return [`$${value.toFixed(2)} (${percent}%)`, props.payload.name]

@@ -110,7 +110,7 @@ export default function Header({ isAuthenticated = false, onSignOut, onShowAuth 
           Bill Buddy
         </h1>
       <div className="header-actions">
-        {isAuthenticated && userEmail && (
+        {isAuthenticated && userEmail ? (
           <div className={`user-menu ${showDropdown ? 'open' : ''}`}>
             <button
               className="user-email"
@@ -126,6 +126,13 @@ export default function Header({ isAuthenticated = false, onSignOut, onShowAuth 
               </div>
             )}
           </div>
+        ) : (
+          <button
+            className="sign-in-button"
+            onClick={() => navigate('/login')}
+          >
+            Sign In
+          </button>
         )}
         <button
           className="receipt-button"
