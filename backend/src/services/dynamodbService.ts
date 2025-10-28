@@ -101,4 +101,19 @@ export class DynamoDBService {
     await this.client.send(command)
     console.log(`Deleted receipt ${receiptId} for user ${userId}`)
   }
+
+  async getUniquePersonNames(userId: string): Promise<string[]> {
+    const receipts = await this.getUserReceiptBreakdowns(userId)
+    const namesSet = new Set<string>()
+
+    receipts.forEach(receipt => {
+      receipt.peopleBreakdown?.forEach(person => {
+        if (person.personName) {
+          namesSet.add(person.personName)
+        }
+      })
+    })
+
+    return Array.from(namesSet).sort()
+  }
 }

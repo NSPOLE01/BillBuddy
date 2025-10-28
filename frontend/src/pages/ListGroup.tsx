@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { getCurrentUser } from 'aws-amplify/auth'
 import { Receipt } from '../types/receipt'
+import { receiptBreakdownApi } from '../services/receiptBreakdownApi'
 import './ListGroup.css'
 
 interface Person {
@@ -16,6 +18,23 @@ export default function ListGroup() {
 
   const [people, setPeople] = useState<Person[]>(initialPeople || [])
   const [personName, setPersonName] = useState('')
+  const [existingNames, setExistingNames] = useState<string[]>([])
+  const [showDuplicateBanner, setShowDuplicateBanner] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
+
+  useEffect(() => {
+    const loadExistingNames = async () => {
+      try {
+        const user = await getCurrentUser()
+        const names = await receiptBreakdownApi.getUniquePersonNames(user.userId)
+        setExistingNames(names)
+      } catch (error) {
+        console.log('Could not load existing names:', error)
+      }
+    }
+
+    loadExistingNames()
+  }, [])
 
   if (!receipt) {
     navigate('/results')
@@ -25,10 +44,11 @@ export default function ListGroup() {
   const handleAddPerson = () => {
     if (personName.trim() === '') return
 
-    // Check if person already exists
-    const exists = people.find(p => p.name.toLowerCase() === personName.trim().toLowerCase())
-    if (exists) {
-      setPersonName('')
+    // Check if person already exists in current group
+    const existsInGroup = people.find(p => p.name.toLowerCase() === personName.trim().toLowerCase())
+    if (existsInGroup) {
+      setShowDuplicateBanner(true)
+      setTimeout(() => setShowDuplicateBanner(false), 3000)
       return
     }
 
@@ -39,7 +59,27 @@ export default function ListGroup() {
 
     setPeople([...people, newPerson])
     setPersonName('')
+    setShowDropdown(false)
   }
+
+  const handleSelectName = (name: string) => {
+    const newPerson: Person = {
+      id: `person-${Date.now()}`,
+      name: name.trim()
+    }
+
+    setPeople([...people, newPerson])
+    setPersonName('')
+    setShowDropdown(false)
+  }
+
+  const filteredNames = existingNames.filter(name => {
+    const notInCurrentGroup = !people.find(p => p.name.toLowerCase() === name.toLowerCase())
+    if (personName.trim() === '') {
+      return notInCurrentGroup
+    }
+    return name.toLowerCase().includes(personName.toLowerCase()) && notInCurrentGroup
+  })
 
   const handleRemovePerson = (personId: string) => {
     setPeople(people.filter(p => p.id !== personId))
@@ -52,21 +92,46 @@ export default function ListGroup() {
 
   return (
     <main className="list-group-container">
+      {showDuplicateBanner && (
+        <div className="duplicate-banner">
+          That name already exists. Please add a different name or add a last name.
+        </div>
+      )}
       <div className="list-group-content">
         <div className="list-group-card">
           <h2 className="list-group-title">List Your Group</h2>
           <p className="list-group-subtitle">Who did you dine/shop with?</p>
 
           <div className="add-person-section">
-            <input
-              type="text"
-              className="person-name-input"
-              placeholder="Enter person's name"
-              value={personName}
-              onChange={(e) => setPersonName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAddPerson()}
-              autoFocus
-            />
+            <div className="person-input-container">
+              <input
+                type="text"
+                className="person-name-input"
+                placeholder="Enter person's name"
+                value={personName}
+                onChange={(e) => {
+                  setPersonName(e.target.value)
+                  setShowDropdown(true)
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddPerson()}
+                onFocus={() => setShowDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                autoFocus
+              />
+              {showDropdown && filteredNames.length > 0 && (
+                <div className="names-dropdown">
+                  {filteredNames.map(name => (
+                    <div
+                      key={name}
+                      className="dropdown-item"
+                      onClick={() => handleSelectName(name)}
+                    >
+                      {name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <button className="add-person-button" onClick={handleAddPerson}>
               Add Person
             </button>

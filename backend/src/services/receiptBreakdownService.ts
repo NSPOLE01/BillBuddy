@@ -143,4 +143,8 @@ export class ReceiptBreakdownService {
   async deleteReceiptBreakdown(userId: string, receiptId: string): Promise<void> {
     return await this.dynamoDBService.deleteReceiptBreakdown(userId, receiptId)
   }
+
+  async getUniquePersonNames(userId: string): Promise<string[]> {
+    return await this.dynamoDBService.getUniquePersonNames(userId)
+  }
 }

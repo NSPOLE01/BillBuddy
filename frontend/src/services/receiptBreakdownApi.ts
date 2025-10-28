@@ -119,4 +119,16 @@ export const receiptBreakdownApi = {
       throw new Error(error.message || 'Failed to delete receipt breakdown')
     }
   },
+
+  async getUniquePersonNames(userId: string): Promise<string[]> {
+    const response = await fetch(`${API_URL}/api/person-names/${userId}`)
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Failed to fetch person names')
+    }
+
+    const data = await response.json()
+    return data.names
+  },
 }

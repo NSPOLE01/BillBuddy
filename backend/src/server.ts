@@ -141,6 +141,25 @@ app.delete('/api/receipt-breakdown/:userId/:receiptId', async (req, res) => {
   }
 })
 
+// Get unique person names for a user
+app.get('/api/person-names/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params
+
+    console.log(`Fetching unique person names for user ${userId}`)
+
+    const names = await receiptBreakdownService.getUniquePersonNames(userId)
+
+    res.json({ names })
+  } catch (error) {
+    console.error('Error fetching person names:', error)
+    res.status(500).json({
+      error: 'Failed to fetch person names',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
+  }
+})
+
 app.listen(port, () => {
   console.log(`BillBuddy backend server running on port ${port}`)
   console.log(`Health check: http://localhost:${port}/health`)
