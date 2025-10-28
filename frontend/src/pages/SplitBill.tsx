@@ -168,7 +168,7 @@ export default function SplitBill() {
     setAssignments(assignments.filter(a => a.itemId !== itemId))
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore - Function kept for future use
   const calculatePersonTotal = (personId: string): number => {
     let total = 0
 

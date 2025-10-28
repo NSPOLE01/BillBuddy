@@ -96,7 +96,7 @@ export default function ReceiptResults() {
     setEditingPriceValue('')
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore - Function kept for future use
   const handleAddTip = () => {
     setTip(0)
     setEditingTip(false)
@@ -162,7 +162,7 @@ export default function ReceiptResults() {
     setManualSubtotal(null)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore - Function kept for future use
   const handleRemoveTax = () => {
     setTax(0)
     setEditingTax(false)
@@ -492,7 +492,7 @@ export default function ReceiptResults() {
                       setEditingTipValue('0')
                     } else {
                       setEditingTip(true)
-                      setEditingTipValue(tip.toString())
+                      setEditingTipValue(String(tip))
                     }
                   }}
                   onBlur={() => {
